@@ -26,7 +26,11 @@ function TeamService:KnitInit()
 end
 
 function TeamService:GetTeamData(team_name: string)
-	return self._TeamData[team_name]
+	for i, v in pairs(self._TeamData) do
+		if v.TeamData.Name == team_name then
+			return v
+		end
+	end
 end
 
 function TeamService:GetAllTeams()

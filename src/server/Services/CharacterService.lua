@@ -20,7 +20,19 @@ function CharacterService:KnitInit()
             Humanoid.NameDisplayDistance = math.huge
         end)
 
+        player.CharacterAppearanceLoaded:Connect(function(character)
+            character.DescendantAdded:Connect(function(descendant)
+                if descendant.Name == "Football" and descendant:IsA("Accoutrement") then
+                    descendant.Name = "FakeFootball"
+                end
+            end)
+        end)
+
         player:GetPropertyChangedSignal("Team"):Connect(function()
+            if not player.Team then
+                return
+            end
+            
             if player.Team.Name == "OFN Media" then
                 if workspace:FindFirstChild(player.Name) then
                     player.Character:Destroy()
