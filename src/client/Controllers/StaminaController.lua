@@ -10,6 +10,7 @@ local StaminaController = Knit.CreateController({
 	CurStam = 250,
 	Running = false,
 	Character = nil,
+	stamdebounce = false,
 })
 
 local SG = Instance.new("ScreenGui")
@@ -69,6 +70,32 @@ function StaminaController:StaminaRegen()
 			Bar.BackgroundColor3 = Color3.new(1 - self.CurStam / self.MaxStam, self.CurStam / self.MaxStam, 0)
 		end
 		self.Regening = false
+	end
+end
+
+function StaminaController:StamChange()
+	if self.Character.Humanoid.WalkSpeed == 0 then
+		return
+	end
+	if self.stamdebounce == false then
+		self.stamdebounce = true
+		if not self.Running then
+			self.Running = true
+			self.Character.Humanoid.WalkSpeed = 18
+			task.spawn(function()
+				self:StaminaRegen()
+			end)
+			task.wait(0.1)
+			self.stamdebounce = false
+		else
+			self.Running = false
+			self.Character.Humanoid.WalkSpeed = 14
+			task.spawn(function()
+				self:StaminaRegen()
+			end)
+			task.wait(0.1)
+			self.stamdebounce = false
+		end
 	end
 end
 

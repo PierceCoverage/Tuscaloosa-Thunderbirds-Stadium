@@ -8,8 +8,12 @@ local CollisionService = Knit.CreateService({
 })
 
 function CollisionService:KnitStart()
-	local wall_parts = "WallParts"
-	local football_parts = "Football"
+	print("CollisionService Started")
+end
+
+function CollisionService:KnitInit()
+	local wall_parts = "wall_parts"
+	local football_parts = "football_parts"
 	PhysicsService:CreateCollisionGroup(wall_parts)
 	PhysicsService:CreateCollisionGroup(football_parts)
 	PhysicsService:CollisionGroupSetCollidable(wall_parts, football_parts, false)
@@ -25,10 +29,6 @@ function CollisionService:KnitStart()
 		end
 	end)
 
-	print("CollisionService Started")
-end
-
-function CollisionService:KnitInit()
 	print("CollisionService Initialized")
 end
 

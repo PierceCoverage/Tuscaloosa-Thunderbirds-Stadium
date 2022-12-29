@@ -13,22 +13,21 @@ function HitboxService:KnitStart()
 end
 
 function HitboxService:KnitInit()
+	Players.PlayerAdded:Connect(function(player)
+		player.CharacterAdded:Connect(function(character)
+			local Jersey = ServerScriptService:WaitForChild("assets").Jersey:Clone()
+			local Weld = Instance.new("Weld")
 
-    Players.PlayerAdded:Connect(function(player)
-        player.CharacterAdded:Connect(function(character)
-            local Jersey = ServerScriptService:WaitForChild("Handlers").EventHandler.Jersey:Clone()
-            local Weld = Instance.new("Weld")
+			Jersey.Script.Disabled = false
+			Jersey.Onside.Disabled = not ReplicatedStorage.OnsideFlag.Value
 
-            Jersey.Script.Disabled = false
-            Jersey.Onside.Disabled = not ReplicatedStorage.OnsideFlag.Value
+			Weld.Part0 = character:WaitForChild("HumanoidRootPart")
+			Weld.Part1 = Jersey
 
-            Weld.Part0 = character:WaitForChild("HumanoidRootPart")
-            Weld.Part1 = Jersey
-            
-            Weld.Parent = Jersey
-            Jersey.Parent = character
-        end)
-    end)
+			Weld.Parent = Jersey
+			Jersey.Parent = character
+		end)
+	end)
 
 	print("HitboxService Initialized")
 end
