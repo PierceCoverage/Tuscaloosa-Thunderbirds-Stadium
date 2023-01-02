@@ -1,5 +1,8 @@
-local TeamInformation = require(game:GetService("ReplicatedStorage"):WaitForChild("Assets").Modules.TeamInformation)
-local HomeTeam = TeamInformation:GetHomeTeam()
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Knit = require(ReplicatedStorage.Packages.Knit)
+local TeamService = Knit.GetService("TeamService")
+
+local HomeTeam = TeamService._HomeTeam
 local League = HomeTeam.LeagueData.League
 
 local settings = {

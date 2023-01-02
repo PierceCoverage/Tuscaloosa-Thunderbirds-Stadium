@@ -16,7 +16,7 @@ function DBLOSService:Fire(player: Player)
 	local GameService = Knit.GetService("GameService")
 	local IndicatorService = Knit.GetService("IndicatorService")
 
-	if player.TeamColor == GameService.Values.HomeTeam or player.TeamColor == GameService.Values.AwayTeam then
+	if player.TeamColor == GameService.Values.Home.Team or player.TeamColor == GameService.Values.Away.Team then
 		if
 			player.Character
 			and player.Character.HumanoidRootPart.Position.Z < 80

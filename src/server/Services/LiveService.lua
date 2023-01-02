@@ -7,7 +7,7 @@ local LiveService = Knit.CreateService({
 	Client = {},
 	_isGame = false,
 	_isPAT = false,
-    _intedByHome = false,
+	_intedByHome = false,
 })
 
 local updating = false
@@ -15,7 +15,7 @@ local old_home_score
 local old_away_score
 local last_score = nil
 
-local function get_update_type()
+function LiveService:GetUpdateType()
 	local GameService = Knit.GetService("GameService")
 
 	if not old_home_score then
@@ -95,7 +95,7 @@ function LiveService:ScoreUpdate(update_type)
 	end
 
 	if not update_type then
-		update_type = get_update_type()
+		update_type = self:GetUpdateType()
 	end
 
 	updating = true
@@ -103,11 +103,11 @@ function LiveService:ScoreUpdate(update_type)
 	task.wait(5)
 	local TeamService = Knit.GetService("TeamService")
 	local GameService = Knit.GetService("GameService")
-	local HomeScore = GameService.Values["HomeScore"]
-	local AwayScore = GameService.Values["AwayScore"]
+	local Away = GameService.Values.Away
+	local Home = GameService.Values.Home
 
-	local HomeTeam = GameService.Values["HomeTeam"]
-	local AwayTeam = GameService.Values["AwayTeam"]
+	local HomeScore = Home.Score
+	local AwayScore = Away.Score
 
 	local quarter_message = string.format("Q%i", GameService.Values["Quarter"])
 
@@ -121,9 +121,9 @@ function LiveService:ScoreUpdate(update_type)
 	local down_message = get_down_message(Down)
 
 	local HomeWinning = HomeScore > AwayScore
-	local winning_team_emoji = HomeWinning and HomeTeam.Name or AwayTeam.Name
+	local winning_team_emoji = HomeWinning and Home.Team.Name or Away.Team.Name
 	local winning_score = HomeWinning and HomeScore or AwayScore
-	local losing_team_emoji = HomeWinning and AwayTeam.Name or HomeTeam.Name
+	local losing_team_emoji = HomeWinning and Away.Team.Name or Home.Team.Name
 	local losing_score = HomeWinning and AwayScore or HomeScore
 	local formatting =
 		"⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n%s\n%s %i\n%s %i\n\n`%s | %s | %s`\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"
@@ -131,7 +131,7 @@ function LiveService:ScoreUpdate(update_type)
 		local text = "**TOUCHDOWN**"
 
 		if AwayScore ~= old_away_score then
-			text = string.upper(text:format(HomeTeam.Name))
+			text = string.upper(text:format(Home.Team.Name))
 			local message = string.format(
 				formatting,
 				text,
@@ -143,10 +143,10 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				down_message
 			)
-			sendMessage(message, TeamService:GetTeamData(AwayTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Away.Team.Name))
 			old_away_score = AwayScore
 		elseif HomeScore ~= old_home_score then
-			text = string.upper(text:format(HomeTeam.Name))
+			text = string.upper(text:format(Home.Team.Name))
 			local message = string.format(
 				formatting,
 				text,
@@ -158,7 +158,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				down_message
 			)
-			sendMessage(message, TeamService:GetTeamData(HomeTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Home.Team.Name))
 
 			old_home_score = HomeScore
 		end
@@ -179,9 +179,9 @@ function LiveService:ScoreUpdate(update_type)
 		local id
 
 		if AwayScore > HomeScore then
-			id = TeamService:GetTeamData(AwayTeam.Name)
+			id = TeamService:GetTeamData(Away.Team.Name)
 		else
-			id = TeamService:GetTeamData(HomeTeam.Name)
+			id = TeamService:GetTeamData(Home.Team.Name)
 		end
 
 		sendMessage(message, id)
@@ -199,7 +199,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(HomeTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Home.Team.Name))
 		else
 			local message = string.format(
 				formatting,
@@ -212,7 +212,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(AwayTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Away.Team.Name))
 		end
 		self._isPAT = false
 	elseif update_type == "PAT" then --must be manually called
@@ -229,7 +229,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(AwayTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Away.Team.Name))
 
 			old_away_score = AwayScore
 		elseif HomeScore ~= old_home_score then
@@ -244,7 +244,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(HomeTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Home.Team.Name))
 
 			old_home_score = HomeScore
 		end
@@ -264,7 +264,7 @@ function LiveService:ScoreUpdate(update_type)
 	elseif update_type == "2PC" then
 		local text = "**2-POINT CONVERSION**"
 		if AwayScore ~= old_away_score then
-			if last_score == HomeTeam.Name then
+			if last_score == Home.Team.Name then
 				--if last score was home team but now away team got 2pc
 				self:scoreUpdate("2PCRET")
 				return
@@ -281,11 +281,11 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(AwayTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Away.Team.Name))
 
 			old_away_score = AwayScore
 		elseif HomeScore ~= old_home_score then
-			if last_score == AwayTeam.Name then
+			if last_score == Away.Team.Name then
 				self:ScoreUpdate("2PCRET")
 				return
 			end
@@ -301,14 +301,14 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(HomeTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Home.Team.Name))
 
 			old_home_score = HomeScore
 		end
 		self._isPAT = false
 	elseif update_type == "2PCNG" then
 		local text = "**2-POINT CONVERSION FAILED**"
-		if last_score == AwayTeam.Name then
+		if last_score == Away.Team.Name then
 			local message = string.format(
 				formatting,
 				text,
@@ -320,10 +320,10 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(AwayTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Away.Team.Name))
 
 			old_away_score = AwayScore
-		elseif last_score == HomeTeam.Name then
+		elseif last_score == Home.Team.Name then
 			local message = string.format(
 				formatting,
 				text,
@@ -335,7 +335,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(HomeTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Home.Team.Name))
 
 			old_home_score = HomeScore
 		end
@@ -354,7 +354,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(AwayTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Away.Team.Name))
 
 			old_away_score = AwayScore
 		elseif HomeScore ~= old_home_score then
@@ -369,7 +369,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(HomeTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Home.Team.Name))
 
 			old_home_score = HomeScore
 		end
@@ -388,7 +388,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(AwayTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Away.Team.Name))
 
 			old_away_score = AwayScore
 		elseif HomeScore ~= old_home_score then
@@ -403,7 +403,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(HomeTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Home.Team.Name))
 
 			old_home_score = HomeScore
 		end
@@ -422,7 +422,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(AwayTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Away.Team.Name))
 			old_away_score = AwayScore
 		elseif HomeScore ~= old_home_score then
 			local message = string.format(
@@ -436,7 +436,7 @@ function LiveService:ScoreUpdate(update_type)
 				clock_message,
 				"Kickoff"
 			)
-			sendMessage(message, TeamService:GetTeamData(HomeTeam.Name))
+			sendMessage(message, TeamService:GetTeamData(Home.Team.Name))
 			old_home_score = HomeScore
 		end
 		self._isPAT = false

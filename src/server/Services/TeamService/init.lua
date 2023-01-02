@@ -39,7 +39,7 @@ function TeamService:KnitStart()
 			end
 
 			if team_object.Name == "Away" then
-				self._AwayTeam = team_object
+				self._AwayTeam = team
 			end
 		end)
 	end
