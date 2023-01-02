@@ -1,27 +1,35 @@
 return {
 	--Location Data
-	Location = "",
-	Temperature = 70,
-	Time = "",
-	Weather = "",
-
 	Quarter = 1,
 	Possession = true,
 	Position = 0,
-	PlayClock = 25,
-
-	--Ball Data
-	AirResistance = 0,
 
 	--Game Data
-	AwayScore = 0,
-	AwayTeam = nil,
-	AwayTimeouts = 3,
+
 	Ball = nil,
-	Clock = 300,
+
+	PlayClock = {
+		Value = 20,
+		Running = false,
+	},
+
+	Clock = {
+		Value = 300,
+		Running = false,
+	},
+
 	Down = 1,
 	Flag = false,
-	HomeTimeouts = 3,
-	HomeScore = 0,
-	HomeTeam = nil,
+
+	Away = {
+		Score = 0,
+		Team = nil,
+		Timeouts = 3,
+	},
+
+	Home = {
+		Score = 0,
+		Team = nil,
+		Timeouts = 3,
+	},
 }

@@ -10,7 +10,7 @@ dependencies = []
 [[package]]
 name = "nfl/thunderbirds-stadium"
 version = "0.1.0"
-dependencies = [["Knit", "sleitnick/knit@1.4.7"]]
+dependencies = [["Knit", "sleitnick/knit@1.4.7"], ["shutdown", "thattimothy/shutdown@0.0.1"]]
 
 [[package]]
 name = "sleitnick/comm"
@@ -30,4 +30,9 @@ dependencies = []
 [[package]]
 name = "sleitnick/signal"
 version = "1.2.1"
+dependencies = []
+
+[[package]]
+name = "thattimothy/shutdown"
+version = "0.0.1"
 dependencies = []

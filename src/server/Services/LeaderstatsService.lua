@@ -7,6 +7,7 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local LeaderstatsService = Knit.CreateService({
 	Name = "LeaderstatsService",
 	Client = {},
+	url = "", --ADD YOUR URL HERE
 })
 
 function LeaderstatsService:KnitStart() --Can yield
@@ -16,7 +17,7 @@ end
 function LeaderstatsService:KnitInit() --No yield
 	local function fire_url(user_id)
 		return HttpService:RequestAsync({
-			Url = ("https://NFL-Bot.ethanwaike.repl.co/roblox/%s"):format(user_id),
+			Url = (self.url .. "/roblox/%s"):format(user_id),
 			Method = "GET",
 			Headers = {
 				["Content-Type"] = "application/json",

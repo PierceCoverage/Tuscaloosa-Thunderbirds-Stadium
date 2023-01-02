@@ -8,7 +8,7 @@ local MessageService = Knit.CreateService({
 	},
 })
 
-function MessageService:Send(Players: table, Message: string, Type: string)
+function MessageService:Send(Players: table, Message: string, Type: string | boolean)
 	for i, v in pairs(Players) do
 		self.Client.MessageSignal:Fire(v, Message, Type)
 	end
