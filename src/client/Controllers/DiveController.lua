@@ -105,7 +105,7 @@ function DiveController:JumpDeb()
 end
 
 function DiveController:HasBall()
-	if self.Character:FindFirstChild("Football") then
+	if self.Character:FindFirstChild("Football") or Players.LocalPlayer.Backpack:FindFirstChild("Football") then
 		return true
 	end
 
@@ -267,5 +267,34 @@ function DiveController:KnitInit()
 
 	print("DiveController Initialized")
 end
+
+local TE = ReplicatedStorage:WaitForChild("TackleEvent")
+TE.OnClientEvent:Connect(function(direction: any, tackle: boolean)
+	if tackle then
+		--nothing
+	else
+		local RootPart = DiveController.Character:FindFirstChild("HumanoidRootPart")
+		if not RootPart then
+			DiveController.Character.Humanoid.Health = 0
+		end
+		if not RootPart:FindFirstChild("Push") then
+			local Push = Instance.new("BodyVelocity")
+			Push.Name = "Push"
+			Push.MaxForce = Vector3.new(1e7, 1e7, 1e7)
+			Push.P = 125
+			Push.Velocity = direction * 13.5 --9
+			Push.Parent = RootPart
+
+			Push:GetPropertyChangedSignal("Velocity"):Connect(function()
+				Push.Velocity = direction * 13.5
+			end)
+
+			coroutine.wrap(function()
+				task.wait(0.25)
+				Push:Destroy()
+			end)()
+		end
+	end
+end)
 
 return DiveController

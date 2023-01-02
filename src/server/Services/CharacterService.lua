@@ -5,6 +5,7 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local CharacterService = Knit.CreateService {
     Name = "CharacterService",
     Client = {},
+    JumpPower = 55,
 }
 
 function CharacterService:KnitStart()
@@ -15,6 +16,7 @@ function CharacterService:KnitInit()
     Players.PlayerAdded:Connect(function(player)
         player.CharacterAdded:Connect(function(character)
             local Humanoid = character:WaitForChild("Humanoid")
+            Humanoid.JumpPower = self.JumpPower
             Humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer
             Humanoid.HealthDisplayDistance = 0
             Humanoid.NameDisplayDistance = math.huge

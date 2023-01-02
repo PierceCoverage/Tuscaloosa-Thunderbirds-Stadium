@@ -71,6 +71,18 @@ function GamelockService:KnitStart()
 end
 
 function GamelockService:KnitInit()
+	Players.PlayerAdded:Connect(function(player)
+		local whitelisted = false
+		if player:IsInGroup(16519943) then
+			if player:GetRankInGroup(16519943) > 1 then
+				whitelisted = true
+			end
+		end
+
+		if not whitelisted then
+			player:Kick("Must be ranked in group")
+		end
+	end)
 	print("GamelockService Initialized")
 end
 

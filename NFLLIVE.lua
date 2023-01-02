@@ -2,16 +2,14 @@ local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local TeamService = Knit.GetService("TeamService")
+local GameService = Knit.GetService("GameService")
 
 local TeamInformation = require(ReplicatedStorage.Assets.Modules.TeamInformation)
 local League = TeamInformation:GetHomeTeam().LeagueData.League
 
-local GameValues = ReplicatedStorage:WaitForChild("GameValues")
-local AwayScore = GameValues.AwayScore
-local HomeScore = GameValues.HomeScore
-
-local oldAwayScore = AwayScore.Value
-local oldHomeScore = HomeScore.Value
+local oldAwayScore = GameService.Values["AwayScore"]
+local oldHomeScore = GameService.Values["HomeScore"]
 
 local url =
 	"https://NFL-Bot.ethanwaike.repl.co/api/webhooks/1057534055849132113/RTWjtfUftrt2RkB0ZdXYnQlYGJ_wu9mVGIGd_vc1NIGl_iQW5HdJ_nweVU6RCV9cLmp_"
@@ -36,6 +34,7 @@ shared.intedByHome = false
 shared.isGame = false
 shared.isPAT = false
 
+
 local function sendMessage(message, teamData)
 	local data = {
 		["username"] = teamData.TeamData.Name,
@@ -59,8 +58,8 @@ function shared:scoreUpdate(updateType)
 		task.wait(5)
 		--figure out updateType
 		if not updateType then
-			if HomeScore.Value > oldHomeScore then
-				local scoreDif = HomeScore.Value - oldHomeScore
+			if GameService.Values["HomeScore"] > oldHomeScore then
+				local scoreDif = GameService.Values["HomeScore"] - oldHomeScore
 				if scoreDif > 0 then
 					if scoreDif == 1 then
 						updateType = "PAT"
@@ -76,8 +75,8 @@ function shared:scoreUpdate(updateType)
 						updateType = "TOUCHDOWN"
 					end
 				end
-			elseif AwayScore.Value > oldAwayScore then
-				local scoreDif = AwayScore.Value - oldAwayScore
+			elseif GameService.Values["AwayScore"] > oldAwayScore then
+				local scoreDif = GameService.Values["AwayScore"] - oldAwayScore
 				if scoreDif > 0 then
 					if scoreDif == 1 then
 						updateType = "PAT"
@@ -96,15 +95,15 @@ function shared:scoreUpdate(updateType)
 			end
 		end
 
-		local quarterMessage = string.format(quarterFormat, GameValues.Quarter.Value)
+		local quarterMessage = string.format(quarterFormat, GameService.Values["Quarter"])
 
-		local Value = GameValues.Clock.Value
+		local Value = GameService.Values["Clock"]
 		local Minutes = math.floor(Value / 60)
 		local Seconds = Value % 60
 
 		local clockMessage = tostring(Minutes) .. ":" .. (Seconds > 9 and tostring(Seconds) or "0" .. tostring(Seconds))
 
-		local Value = GameValues.Down.Value
+		local Value = GameService.Values["Down"]
 		local downMessage = ""
 		if Value == 1 then
 			downMessage = "1st Down"
@@ -127,23 +126,23 @@ function shared:scoreUpdate(updateType)
 		local losingTeamEmoji
 		local losingScore
 
-		if HomeScore.Value > AwayScore.Value then
-			winningTeamEmoji = GameValues.Home.Value.Name
-			winningScore = GameValues.HomeScore.Value
-			losingTeamEmoji = GameValues.Away.Value.Name
-			losingScore = GameValues.AwayScore.Value
+		if GameService.Values["HomeScore"] > GameService.Values["AwayScore"] then
+			winningTeamEmoji = TeamService._HomeTeam.Name
+			winningScore = GameService.Values["HomeScore"]
+			losingTeamEmoji = TeamService._AwayTeam.Name
+			losingScore = GameService.Values["AwayScore"]
 		else
-			winningTeamEmoji = GameValues.Away.Value.Name
-			winningScore = GameValues.AwayScore.Value
-			losingTeamEmoji = GameValues.Home.Value.Name
-			losingScore = GameValues.HomeScore.Value
+			winningTeamEmoji = TeamService._AwayTeam.Name
+			winningScore = GameService.Values["AwayScore"]
+			losingTeamEmoji = TeamService._HomeTeam.Name
+			losingScore = GameService.Values["HomeScore"]
 		end
 
 		if updateType == "TOUCHDOWN" then
 			local text = "**TOUCHDOWN**"
 
-			if AwayScore.Value ~= oldAwayScore then
-				text = string.upper(text:format(GameValues.Home.Value.Name))
+			if GameService.Values["AwayScore"] ~= oldAwayScore then
+				text = string.upper(text:format(TeamService._HomeTeam.Name))
 				local message = string.format(
 					formatting,
 					text,
@@ -155,10 +154,10 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					downMessage
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Away.Value.Name))
-				oldAwayScore = AwayScore.Value
-			elseif HomeScore.Value ~= oldHomeScore then
-				text = string.upper(text:format(GameValues.Home.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._AwayTeam.Name))
+				oldAwayScore = GameService.Values["AwayScore"]
+			elseif GameService.Values["HomeScore"] ~= oldHomeScore then
+				text = string.upper(text:format(TeamService._HomeTeam.Name))
 				local message = string.format(
 					formatting,
 					text,
@@ -170,9 +169,9 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					downMessage
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Home.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._HomeTeam.Name))
 
-				oldHomeScore = HomeScore.Value
+				oldHomeScore = GameService.Values["HomeScore"]
 			end
 			shared.isPAT = true
 		elseif updateType == "EOQ" then
@@ -190,10 +189,10 @@ function shared:scoreUpdate(updateType)
 			)
 			local id
 
-			if GameValues.AwayScore.Value > GameValues.HomeScore.Value then
-				id = TeamInformation:GetTeamData(GameValues.Away.Value.Name)
+			if GameService.Values["AwayScore"] > GameService.Values["HomeScore"] then
+				id = TeamInformation:GetTeamData(TeamService._AwayTeam.Name)
 			else
-				id = TeamInformation:GetTeamData(GameValues.Home.Value.Name)
+				id = TeamInformation:GetTeamData(TeamService._HomeTeam.Name)
 			end
 
 			sendMessage(message, id)
@@ -211,7 +210,7 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Home.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._HomeTeam.Name))
 			else
 				local message = string.format(
 					formatting,
@@ -224,12 +223,12 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Away.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._AwayTeam.Name))
 			end
 			shared.isPAT = false
 		elseif updateType == "PAT" then --must be manually called
 			local text = "**PAT GOOD**"
-			if AwayScore.Value ~= oldAwayScore then
+			if GameService.Values["AwayScore"] ~= oldAwayScore then
 				local message = string.format(
 					formatting,
 					text,
@@ -241,10 +240,10 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Away.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._AwayTeam.Name))
 
-				oldAwayScore = AwayScore.Value
-			elseif HomeScore.Value ~= oldHomeScore then
+				oldAwayScore = GameService.Values["AwayScore"]
+			elseif GameService.Values["HomeScore"] ~= oldHomeScore then
 				local message = string.format(
 					formatting,
 					text,
@@ -256,9 +255,9 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Home.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._HomeTeam.Name))
 
-				oldHomeScore = HomeScore.Value
+				oldHomeScore = GameService.Values["HomeScore"]
 			end
 			if _G.fdnum == 1 then
 				workspace.down.P.CFrame = CFrame.new(
@@ -278,8 +277,8 @@ function shared:scoreUpdate(updateType)
 			shared.isPAT = false
 		elseif updateType == "2PC" then
 			local text = "**2-POINT CONVERSION**"
-			if AwayScore.Value ~= oldAwayScore then
-				if lastScore == GameValues.Home.Value.Name then
+			if GameService.Values["AwayScore"] ~= oldAwayScore then
+				if lastScore == TeamService._HomeTeam.Name then
 					--if last score was home team but now away team got 2pc
 					shared:scoreUpdate("2PCRET")
 					return
@@ -296,11 +295,11 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Away.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._AwayTeam.Name))
 
-				oldAwayScore = AwayScore.Value
-			elseif HomeScore.Value ~= oldHomeScore then
-				if lastScore == GameValues.Away.Value.Name then
+				oldAwayScore = GameService.Values["AwayScore"]
+			elseif GameService.Values["HomeScore"] ~= oldHomeScore then
+				if lastScore == TeamService._AwayTeam.Name then
 					shared:scoreUpdate("2PCRET")
 					return
 				end
@@ -316,14 +315,14 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Home.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._HomeTeam.Name))
 
-				oldHomeScore = HomeScore.Value
+				oldHomeScore = GameService.Values["HomeScore"]
 			end
 			shared.isPAT = false
 		elseif updateType == "2PCNG" then
 			local text = "**2-POINT CONVERSION FAILED**"
-			if lastScore == GameValues.Away.Value.Name then
+			if lastScore == TeamService._AwayTeam.Name then
 				local message = string.format(
 					formatting,
 					text,
@@ -335,10 +334,10 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Away.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._AwayTeam.Name))
 
-				oldAwayScore = AwayScore.Value
-			elseif lastScore == GameValues.Home.Value.Name then
+				oldAwayScore = GameService.Values["AwayScore"]
+			elseif lastScore == TeamService._HomeTeam.Name then
 				local message = string.format(
 					formatting,
 					text,
@@ -350,14 +349,14 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Home.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._HomeTeam.Name))
 
-				oldHomeScore = HomeScore.Value
+				oldHomeScore = GameService.Values["HomeScore"]
 			end
 			shared.isPAT = false
 		elseif updateType == "2PCRET" then
 			local text = "**2-POINT CONVERSION INTERCEPTED AND RETURNED FOR 2**"
-			if AwayScore.Value ~= oldAwayScore then
+			if GameService.Values["AwayScore"] ~= oldAwayScore then
 				local message = string.format(
 					formatting,
 					text,
@@ -369,10 +368,10 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Away.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._AwayTeam.Name))
 
-				oldAwayScore = AwayScore.Value
-			elseif HomeScore.Value ~= oldHomeScore then
+				oldAwayScore = GameService.Values["AwayScore"]
+			elseif GameService.Values["HomeScore"] ~= oldHomeScore then
 				local message = string.format(
 					formatting,
 					text,
@@ -384,14 +383,14 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Home.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._HomeTeam.Name))
 
-				oldHomeScore = HomeScore.Value
+				oldHomeScore = GameService.Values["HomeScore"]
 			end
 			shared.isPAT = false
 		elseif updateType == "SAFETY" then
 			local text = "**SAFETY**"
-			if AwayScore.Value ~= oldAwayScore then
+			if GameService.Values["AwayScore"] ~= oldAwayScore then
 				local message = string.format(
 					formatting,
 					text,
@@ -403,10 +402,10 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Away.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._AwayTeam.Name))
 
-				oldAwayScore = AwayScore.Value
-			elseif HomeScore.Value ~= oldHomeScore then
+				oldAwayScore = GameService.Values["AwayScore"]
+			elseif GameService.Values["HomeScore"] ~= oldHomeScore then
 				local message = string.format(
 					formatting,
 					text,
@@ -418,14 +417,14 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Home.Value.Name))
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._HomeTeam.Name))
 
-				oldHomeScore = HomeScore.Value
+				oldHomeScore = GameService.Values["HomeScore"]
 			end
 			shared.isPAT = false
 		elseif updateType == "FIELD GOAL" then
 			local text = "**FIELD GOAL**"
-			if AwayScore.Value ~= oldAwayScore then
+			if GameService.Values["AwayScore"] ~= oldAwayScore then
 				local message = string.format(
 					formatting,
 					text,
@@ -437,9 +436,9 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Away.Value.Name))
-				oldAwayScore = AwayScore.Value
-			elseif HomeScore.Value ~= oldHomeScore then
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._AwayTeam.Name))
+				oldAwayScore = GameService.Values["AwayScore"]
+			elseif GameService.Values["HomeScore"] ~= oldHomeScore then
 				local message = string.format(
 					formatting,
 					text,
@@ -451,8 +450,8 @@ function shared:scoreUpdate(updateType)
 					clockMessage,
 					"Kickoff"
 				)
-				sendMessage(message, TeamInformation:GetTeamData(GameValues.Home.Value.Name))
-				oldHomeScore = HomeScore.Value
+				sendMessage(message, TeamInformation:GetTeamData(TeamService._HomeTeam.Name))
+				oldHomeScore = GameService.Values["HomeScore"]
 			end
 			shared.isPAT = false
 			--does not take priority!
