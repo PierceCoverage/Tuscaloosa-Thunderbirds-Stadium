@@ -149,7 +149,7 @@ function DiveController:OPDive()
 			if self.Character.HumanoidRootPart:FindFirstChild("BodyGyro") then
 				self.Character.HumanoidRootPart.BodyGyro:Destroy()
 			end
-			Diving = false
+			self.Diving = false
 			self.Character.Humanoid.PlatformStand = false
 			self.Character.Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
 			--Humanoid.AutoRotate = true
@@ -158,6 +158,7 @@ function DiveController:OPDive()
 end
 
 function DiveController:Dive()
+	print("Diving")
 	if self:HasBall() then
 		if self.Character.Humanoid.PlatformStand and self.CanJump then -- Tackled
 			--print("Backspace get up")
@@ -183,7 +184,7 @@ function DiveController:Dive()
 			if self.Character.HumanoidRootPart:FindFirstChild("BodyGyro") then
 				self.Character.HumanoidRootPart.BodyGyro:Destroy()
 			end
-			Diving = false
+			self.Diving = false
 			self.Character.Humanoid.PlatformStand = false
 			self.Character.Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
 			--Humanoid.AutoRotate = true
@@ -207,7 +208,7 @@ function DiveController:KnitInit()
 		Humanoid:GetPropertyChangedSignal("Jump"):Connect(function()
 			if Humanoid.Jump then
 				if self.CanJump then
-					if Diving then
+					if self.Diving then
 						--print("Space get up")
 						task.spawn(function()
 							self:JumpDeb()
@@ -215,7 +216,7 @@ function DiveController:KnitInit()
 						if character.HumanoidRootPart:FindFirstChild("BodyGyro") then
 							character.HumanoidRootPart.BodyGyro:Destroy()
 						end
-						Diving = false
+						self.Diving = false
 						Humanoid.PlatformStand = false
 						Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
 						--Humanoid.AutoRotate = true

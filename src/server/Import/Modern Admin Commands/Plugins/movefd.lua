@@ -32,7 +32,7 @@ local Plugin = {
 			local tween = TweenService:Create(first.P, tweenInfo, { CFrame = target })
 			tween:Play()
 
-			GameService:UpdateValue({ Down = 1 })
+			GameService:Update({ Down = 1 })
 		end,
 	},
 }

@@ -42,15 +42,15 @@ local Plugin = {
 			local Down = GameService.Values.Down
 
 			if Down == 1 then
-				GameService:UpdateValue({ Down = 2 })
+				GameService:Update({ Down = 2 })
 			elseif Down == 2 then
-				GameService:UpdateValue({ Down = 3 })
+				GameService:Update({ Down = 3 })
 			elseif Down == 3 then
-				GameService:UpdateValue({ Down = 4 })
+				GameService:Update({ Down = 4 })
 			end
 			local FD = ChainsService.first
 			if GameService.Values.Position > FD.P.CFrame.X and IndicatorService._Direction == 1 then
-				GameService:UpdateValue({ Down = 1 })
+				GameService:Update({ Down = 1 })
 				local target = CFrame.new(
 					GameService.Values.Position + (30 * IndicatorService._Direction),
 					FD.P.CFrame.Y,
@@ -62,7 +62,7 @@ local Plugin = {
 				local tween = TweenService:Create(FD.P, tweenInfo, { CFrame = target })
 				tween:Play()
 			elseif GameService.Values.Position < FD.P.CFrame.X and IndicatorService._Direction == -1 then
-				GameService:UpdateValue({ Down = 1 })
+				GameService:Update({ Down = 1 })
 				local target = CFrame.new(
 					GameService.Values.Position + (30 * IndicatorService._Direction),
 					FD.P.CFrame.Y,

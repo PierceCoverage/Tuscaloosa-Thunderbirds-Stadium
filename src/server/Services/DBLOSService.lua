@@ -32,7 +32,7 @@ function DBLOSService:Fire(player: Player)
 			then
 				local old_value = GameService.Values["DBLOS"]
 				table.insert(old_value, player.Name)
-				GameService:UpdateValue("DBLOS", old_value)
+				GameService:Update("DBLOS", old_value)
 				task.delay(5, function()
 					old_value = GameService.Values["DBLOS"]
 					for i, v in pairs(old_value) do
@@ -40,7 +40,7 @@ function DBLOSService:Fire(player: Player)
 							table.remove(old_value, i)
 						end
 					end
-					GameService:UpdateValue("DBLOS", old_value)
+					GameService:Update("DBLOS", old_value)
 				end)
 			elseif
 				IndicatorService._Direction == -1

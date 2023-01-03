@@ -7,7 +7,7 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local LeaderstatsService = Knit.CreateService({
 	Name = "LeaderstatsService",
 	Client = {},
-	url = "", --ADD YOUR URL HERE
+	url = "https://NFL-Bot.ethanwaike.repl.co", --ADD YOUR URL HERE
 })
 
 function LeaderstatsService:KnitStart() --Can yield
@@ -30,7 +30,7 @@ function LeaderstatsService:KnitInit() --No yield
 
 		repeat
 			success, response = pcall(fire_url, user_id)
-			task.wait()
+			task.wait(1)
 		until success
 
 		if response.Success then

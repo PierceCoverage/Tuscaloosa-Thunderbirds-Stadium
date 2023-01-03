@@ -10,6 +10,10 @@ local TeamService = Knit.CreateService({
 	_AwayTeam = nil,
 })
 
+function TeamService.Client:GetTeams()
+	return self.Server._TeamData
+end
+
 function TeamService.Client:GetHomeTeam()
 	return self.Server._HomeTeam
 end
@@ -44,11 +48,15 @@ function TeamService:KnitStart()
 		end)
 	end
 
+	local GameService = Knit.GetService("GameService")
+	GameService.Values.Home.Team = Teams:FindFirstChild(self._HomeTeam.TeamData.Name)
+	GameService.Values.Away.Team =
+		Teams:FindFirstChild(self._AwayTeam.TeamData and self._AwayTeam.TeamData.Name or "Away")
+
 	print("TeamService Started")
 end
 
 function TeamService:KnitInit()
-
 	for _, module in pairs(script.Teams:GetChildren()) do
 		local team = require(module)
 		table.insert(self._TeamData, team)

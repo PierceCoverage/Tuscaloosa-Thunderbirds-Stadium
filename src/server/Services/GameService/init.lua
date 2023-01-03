@@ -2,9 +2,12 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
-local GameService = Knit.CreateService({
+local GameService
+GameService = Knit.CreateService({
 	Name = "GameService",
-	Client = {},
+	Client = {
+		SendValues = Knit.CreateSignal(),
+	},
 	Values = {},
 })
 
@@ -17,7 +20,7 @@ function GameService:WorkspaceBalls()
 end
 
 function GameService:HomeTeamHasBall()
-	for _, v in pairs(self.Values.HomeTeam:GetPlayers()) do
+	for _, v in pairs(self.Values.Home.Team:GetPlayers()) do
 		if v.Character and v.Character:FindFirstChild("Football") then
 			return true
 		end
@@ -42,14 +45,38 @@ function GameService:ClearBalls()
 	end
 end
 
-function GameService.Client:Get(Key)
-	return GameService.Server.Values[Key]
+function GameService.Client:Get()
+	return self.Server.Values
 end
 
-function GameService:UpdateValue(toupdate: table)
+function GameService:Update(toupdate: table)
 	for i, v in pairs(toupdate) do
-		self.Values[i] = v
+		if toupdate == "HomeTimeouts" then
+			self.Values.Home.Timeouts += v
+		elseif toupdate == "HomeTeam" then
+			self.Values.Home.Team = v
+		elseif toupdate == "HomeScore" then
+			self.Values.Home.Score += v
+		elseif toupdate == "AwayTimeouts" then
+			self.Values.Away.Timeouts += v
+		elseif toupdate == "AwayTeam" then
+			self.Values.Away.Team = v
+		elseif toupdate == "AwayScore" then
+			self.Values.Away.Score += v
+		elseif toupdate == "ClockRunning" then
+			self.Values.Clock.Running = v
+		elseif toupdate == "ClockValue" then
+			self.Values.Clock.Value += v
+		elseif toupdate == "PlayClockValue" then
+			self.Values.PlayClock.Value += v
+		elseif toupdate == "PlayClockRunning" then
+			self.Values.PlayClock.Running = v
+		else
+			self.Values[i] = v
+		end
 	end
+
+	self.Client.SendValues:FireAll(self.Values)
 end
 
 function GameService:KnitStart()
@@ -58,6 +85,7 @@ end
 
 function GameService:KnitInit()
 	self.Values = require(script.values)
+
 	print("GameService Initialized")
 end
 

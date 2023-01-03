@@ -29,7 +29,7 @@ function IndicatorService:Fire(z)
 			update_table["StatYard"] = math.floor(workspace.scrimmage.Position.X - z) / 3
 		end
 
-		GameService:UpdateValue(update_table)
+		GameService:Update(update_table)
 
 		task.wait(self.DebounceLength)
 

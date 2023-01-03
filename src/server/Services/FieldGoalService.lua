@@ -39,7 +39,6 @@ function FieldGoalService:KnitInit()
 					debounce = true
 					_G.autoStop = true
 					MessageService:Send(Players:GetPlayers(), "Field Goal is Good")
-					ReplicatedStorage:WaitForChild("MsgEvent"):FireAllClients("FG")
 					debounce = false
 				end
 			end)
