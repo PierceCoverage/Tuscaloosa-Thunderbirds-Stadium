@@ -18,9 +18,16 @@ function CollisionService:KnitInit()
 	PhysicsService:CreateCollisionGroup(football_parts)
 	PhysicsService:CollisionGroupSetCollidable(wall_parts, football_parts, false)
 
+	local ScoreboardService = Knit.GetService("ScoreboardService")
+
 	for _, v in pairs(workspace.Field.Walls:GetChildren()) do
 		v.CanCollide = true
 		PhysicsService:SetPartCollisionGroup(v, wall_parts)
+		v.Touched:Connect(function(part)
+			if part.Name == "Football" then
+				ScoreboardService:RunClock(false)
+			end
+		end)
 	end
 
 	workspace.ChildAdded:Connect(function(child)

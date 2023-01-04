@@ -22,6 +22,7 @@ function IndicatorService:Fire(z)
 		positionIndicator.Name = "positionIndicator"
 		positionIndicator.CFrame = CFrame.new(z, workspace.scrimmage.CFrame.Y, workspace.scrimmage.CFrame.Z)
 		positionIndicator.BrickColor = BrickColor.new("Bright red")
+		GameService:Update({ ClockRunning = false })
 		local update_table = { Position = z }
 
 		if self._Direction == 1 then
@@ -78,9 +79,11 @@ function IndicatorService:KnitStart()
 						else
 							self:Fire(part.Parent.Football.Handle.Position.X)
 						end
-						OOB_Blocks["OOB Outer Line"].Color = Color3.fromRGB(255, 255, 255)
-						OOB_Blocks["Inner OOB Line"].Color = Color3.fromRGB(255, 255, 255)
-						oobdebounce = false
+						task.delay(self.DebounceLength, function()
+							OOB_Blocks["OOB Outer Line"].Color = Color3.fromRGB(255, 255, 255)
+							OOB_Blocks["Inner OOB Line"].Color = Color3.fromRGB(255, 255, 255)
+							oobdebounce = false
+						end)
 					end
 				end
 			end)
