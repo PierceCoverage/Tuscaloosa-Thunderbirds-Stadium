@@ -61,7 +61,6 @@ function TeamService:KnitInit()
 		local team = require(module)
 		table.insert(self._TeamData, team)
 		if team.TeamData.PlaceId == game.PlaceId then
-			print("Home team found!", team.TeamData.Name)
 			self._HomeTeam = team
 		end
 	end

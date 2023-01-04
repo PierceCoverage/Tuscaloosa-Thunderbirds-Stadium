@@ -9,7 +9,6 @@ local Plugin = {
 		Fun = false, -- Is it fun? -- WIP
 		AdminLevel = "Moderators", -- Admin level, Moderators, Admins, Owners, Creators
 		Function = function(plr, args)
-			print("Running!")
 			local Knit = require(ReplicatedStorage.Packages.Knit)
 			local IndicatorService = Knit.GetService("IndicatorService")
 			local ChainsService = Knit.GetService("ChainsService")
@@ -22,7 +21,6 @@ local Plugin = {
 			end
 
 			if modifier ~= 0 then
-				print("Modifier")
 				local target = CFrame.new(down.P.CFrame.X + modifier, down.P.CFrame.Y, down.P.CFrame.Z)
 					* CFrame.Angles(0, math.rad(-90), 0)
 				local distance = math.abs(target.X - down.P.CFrame.X)
@@ -30,7 +28,6 @@ local Plugin = {
 				local tween = TweenService:Create(down.P, tweenInfo, { CFrame = target })
 				tween:Play()
 			else
-				print("No modifier")
 				local target = CFrame.new(GameService.Values.Position, down.P.CFrame.Y, down.P.CFrame.Z)
 					* CFrame.Angles(0, math.rad(-90), 0)
 

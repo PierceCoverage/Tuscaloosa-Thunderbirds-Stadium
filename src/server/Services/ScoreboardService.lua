@@ -21,17 +21,14 @@ end
 local debounce = {}
 
 function ScoreboardService:ReceiveData(player: Player, code: string)
-
 	if debounce[player.Name] then
 		return
 	end
 
 	debounce[player.Name] = true
-	task.delay(.5, function()
+	task.delay(0.5, function()
 		debounce[player.Name] = false
 	end)
-	
-	print(player, code)
 
 	if player.Team.Name ~= "Referee" then
 		return
@@ -119,8 +116,9 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			if DEBOUNCE == true then
 				DEBOUNCE = false
 				ReplicatedStorage.Touchdown:FireAllClients(player, "Home")
-				task.wait(3)
-				DEBOUNCE = true
+				task.delay(3, function()
+					DEBOUNCE = true
+				end)
 			end
 			LiveService:ScoreUpdate("TOUCHDOWN")
 			GameService:Update({ Down = 6 })
@@ -267,8 +265,9 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			if DEBOUNCE == true then
 				DEBOUNCE = false
 				ReplicatedStorage.Touchdown:FireAllClients(player, "Away")
-				task.wait(3)
-				DEBOUNCE = true
+				task.delay(3, function()
+					DEBOUNCE = true
+				end)
 			end
 			LiveService:ScoreUpdate("TOUCHDOWN")
 			GameService:Update({ Down = 6 })
@@ -381,10 +380,12 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 	elseif item == "Q" then
 		if action == "M" then
 			GameService:Update({
-				Quarter = if GameService.Values.Quarter > 1 then GameService.Values.Quarter - 1 else 1,
+				Quarter = GameService.Values.Quarter > 1 and GameService.Values.Quarter - 1 or 1,
 			})
 		elseif action == "P" then
-			GameService:Update({ Quarter = 1 })
+			GameService:Update({
+				Quarter = GameService.Values.Quarter + 1,
+			})
 		end
 	elseif item == "D" then
 		if action == "M" then
@@ -582,7 +583,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 end
 
 function ScoreboardService:SetAutoStop(bool: boolean)
-	print(bool)
+	self._AutoStop = bool
 end
 
 function ScoreboardService:RunPC(bool: boolean)
@@ -599,16 +600,17 @@ function ScoreboardService:RunPC(bool: boolean)
 	if bool then
 		GameService:Update({ PlayClockRunning = true })
 		ReplicatedStorage.Stats.LastQB.Value = "Off"
+		task.delay(0.5, function()
+			repeat
+				GameService:Update({ PlayClockValue = -1 })
+				task.spawn(function()
+					GameService.Client.SendValues:FireAll(GameService.Values)
+				end)
+				task.wait(1)
+			until GameService.Values.PlayClock.Running == false or GameService.Values.PlayClock.Value == 0
 
-		repeat
-			GameService:Update({ PlayClockValue = -1 })
-			task.spawn(function()
-				GameService.Client.SendValues:FireAll(GameService.Values)
-			end)
-			task.wait(1)
-		until GameService.Values.PlayClock.Running == false or GameService.Values.PlayClock.Value == 0
-
-		GameService:Update({ PlayClockRunning = false })
+			GameService:Update({ PlayClockRunning = false })
+		end)
 	else
 		GameService:Update({ PlayClockRunning = false })
 	end
@@ -626,19 +628,21 @@ function ScoreboardService:RunClock(bool: boolean)
 
 	if bool then
 		GameService:Update({ ClockRunning = true })
-		repeat
-			GameService:Update({ ClockValue = -1 })
-			task.spawn(function()
-				GameService.Client.SendValues:FireAll(GameService.Values)
-			end)
-			task.wait(1)
-		until GameService.Values.Clock.Running == false
-			or GameService.Values.Clock.Value == 0
-			or self._AutoStop == true
-		GameService:Update({ ClockRunning = false })
-		self.Client.StopRecord:FireAll()
-		GameService:Update({ ClockRunning = false })
-		self._AutoStop = false
+		task.delay(0.5, function()
+			repeat
+				GameService:Update({ ClockValue = -1 })
+				task.spawn(function()
+					GameService.Client.SendValues:FireAll(GameService.Values)
+				end)
+				task.wait(1)
+			until GameService.Values.Clock.Running == false
+				or GameService.Values.Clock.Value == 0
+				or self._AutoStop == true
+			GameService:Update({ ClockRunning = false })
+			self.Client.StopRecord:FireAll()
+			GameService:Update({ ClockRunning = false })
+			self._AutoStop = false
+		end)
 	else
 		GameService:Update({ ClockRunning = false })
 		self._AutoStop = false

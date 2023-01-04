@@ -24,7 +24,7 @@ function DBLOSService:Fire(player: Player)
 			and player.Character.HumanoidRootPart.Position.X < 180
 			and player.Character.HumanoidRootPart.Position.X > -180
 			and player.Character.HumanoidRootPart.Position.X
-			and (GameService.Values["DBLOS"][player.Name])
+			and GameService.Values["DBLOS"][player.Name]
 		then
 			if
 				IndicatorService._Direction == 1
@@ -47,14 +47,13 @@ function DBLOSService:Fire(player: Player)
 				and player.Character.HumanoidRootPart.Position.X < ChainsService.down.Position.X
 			then
 				table.insert(self.Players, player.Name)
-
-				task.wait(5)
-
-				for i, v in pairs(self.Players) do
-					if v == player.Name then
-						table.remove(self.Players, i)
+				task.delay(5, function()
+					for i, v in pairs(self.Players) do
+						if v == player.Name then
+							table.remove(self.Players, i)
+						end
 					end
-				end
+				end)
 			end
 		end
 	end

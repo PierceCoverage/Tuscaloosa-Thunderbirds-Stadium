@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local IndicatorService = Knit.CreateService({
@@ -31,15 +32,14 @@ function IndicatorService:Fire(z)
 
 		GameService:Update(update_table)
 
-		task.wait(self.DebounceLength)
+		task.delay(self.DebounceLength, function()
+			self._TackleDebounce = false
+			local tInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
+			local goal = { Transparency = 1 }
 
-		self._TackleDebounce = false
-
-		task.spawn(function()
-			while positionIndicator.Transparency < 1 do
-				positionIndicator.Transparency += 0.05
-				task.wait()
-			end
+			local tween = TweenService:Create(positionIndicator, tInfo, goal)
+			tween:Play()
+			tween.Completed:Wait()
 			positionIndicator:Destroy()
 		end)
 	end

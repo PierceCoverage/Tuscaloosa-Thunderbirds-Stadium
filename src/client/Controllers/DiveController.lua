@@ -69,7 +69,6 @@ function DiveController:CreateBodyGyro(GoalCFrame)
 	task.spawn(function()
 		self:ShowDiveCooldown()
 	end)
-	ReplicatedStorage.Dive:FireServer()
 	local bg = Instance.new("BodyGyro")
 	bg.CFrame = GoalCFrame
 	bg.MaxTorque = Vector3.new(999999, 999999, 999999)
@@ -78,16 +77,18 @@ function DiveController:CreateBodyGyro(GoalCFrame)
 		+ self.Character.HumanoidRootPart.CFrame.LookVector * 2 * self.Character.Humanoid.WalkSpeed
 	self.Character.HumanoidRootPart.CFrame = GoalCFrame
 	self.Character.Humanoid.PlatformStand = true
-	task.wait(1)
-	self.Character.HumanoidRootPart.Velocity = Vector3.new()
-	if bg then
-		bg:Destroy()
-	end
-	task.wait(3)
-	--print("Dive off cooldown")
-	self.DivingCooldown = false
-	self.Character.Humanoid.PlatformStand = false
-	--Humanoid.AutoRotate = true
+	task.delay(1, function()
+		self.Character.HumanoidRootPart.Velocity = Vector3.new()
+		if bg then
+			bg:Destroy()
+		end
+	end)
+	task.delay(4, function()
+		--print("Dive off cooldown")
+		self.DivingCooldown = false
+		self.Character.Humanoid.PlatformStand = false
+		--Humanoid.AutoRotate = true
+	end)
 end
 
 local running = false
@@ -290,10 +291,9 @@ TE.OnClientEvent:Connect(function(direction: any, tackle: boolean)
 				Push.Velocity = direction * 13.5
 			end)
 
-			coroutine.wrap(function()
-				task.wait(0.25)
+			task.delay(0.25, function()
 				Push:Destroy()
-			end)()
+			end)
 		end
 	end
 end)
