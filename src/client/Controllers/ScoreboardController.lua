@@ -13,7 +13,7 @@ function ScoreboardController:KnitStart()
     local Values = GameService:Get()
 
     local function set_values()
-        Frame.Main["Away Score"].Text = tostring(Values.Away.Score)
+        Frame.Main.Frame["Away Score"].Text = tostring(Values.Away.Score)
         Frame.Main.Frame["Home Score"].Text = tostring(Values.Home.Score)
         local num = Values.Away.Timeouts
         for i = 1, 3 do
@@ -103,6 +103,8 @@ function ScoreboardController:KnitStart()
             end
         end
     end
+
+    set_values()
 
     GameService.SendValues:Connect(function(v)
         Values = v

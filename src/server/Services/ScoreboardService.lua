@@ -18,9 +18,21 @@ function ScoreboardService.Client:SendData(player: Player, code: string)
 	return self.Server:ReceiveData(player, code)
 end
 
+local debounce = {}
+
 function ScoreboardService:ReceiveData(player: Player, code: string)
-	print(player, code)
+
+	if debounce[player.Name] then
+		return
+	end
+
+	debounce[player.Name] = true
+	task.delay(.5, function()
+		debounce[player.Name] = false
+	end)
 	
+	print(player, code)
+
 	if player.Team.Name ~= "Referee" then
 		return
 	end
@@ -42,14 +54,14 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 	end
 	if item == "H" then
 		if action == "P" then
-			GameService:Update({HomeScore = tonumber(amount)})
+			GameService:Update({ HomeScore = tonumber(amount) })
 			LiveService:ScoreUpdate()
 		elseif action == "M" then
-			GameService:Update({HomeScore = -tonumber(amount)})
+			GameService:Update({ HomeScore = -tonumber(amount) })
 			LiveService:ScoreUpdate()
 		elseif action == "F" then
-			GameService:Update({HomeScore = 3})
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ HomeScore = 3 })
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Field Goal is Good!", true)
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
@@ -76,9 +88,9 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			end
 			IndicatorService._Direction *= -1
 			LiveService:ScoreUpdate("FIELD GOAL")
-			GameService:Update({Down = 5})
+			GameService:Update({ Down = 5 })
 		elseif code:sub(2, len) == "TD" then
-			GameService:Update({HomeScore = 6})
+			GameService:Update({ HomeScore = 6 })
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
@@ -102,7 +114,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			end
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Touchdown!", true)
 			if DEBOUNCE == true then
 				DEBOUNCE = false
@@ -111,25 +123,25 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 				DEBOUNCE = true
 			end
 			LiveService:ScoreUpdate("TOUCHDOWN")
-			GameService:Update({Down = 6})
+			GameService:Update({ Down = 6 })
 		elseif code:sub(2, 3) == "TO" then
 			if code:sub(4, 4) == "M" then
 				if GameService.Values.Home.Timeouts == 0 then
 					return
 				end
-				GameService:Update({HomeTimeouts = -1})
-				GameService:Update({ClockRunning = false})
+				GameService:Update({ HomeTimeouts = -1 })
+				GameService:Update({ ClockRunning = false })
 				MessageService:Send(Players:GetPlayers(), player.Name .. ": Timeout Home")
 			else
-				if GameService.Values.Home.Timeoujts == 3 then
+				if GameService.Values.Home.Timeouts == 3 then
 					return
 				end
-				GameService:Update({ClockRunning = false})
-				GameService:Update({HomeTimeouts = 1})
+				GameService:Update({ ClockRunning = false })
+				GameService:Update({ HomeTimeouts = 1 })
 			end
 		elseif code:sub(2, len) == "SFT" then
-			GameService:Update({HomeScore = 2})
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ HomeScore = 2 })
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Safety Home", true)
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
@@ -156,10 +168,10 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			end
 			IndicatorService._Direction *= -1
 			LiveService:ScoreUpdate("SAFETY")
-			GameService:Update({Down = 5})
+			GameService:Update({ Down = 5 })
 		elseif code:sub(2, len) == "2P" then
-			GameService:Update({HomeScore = 2})
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ HomeScore = 2 })
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": 2 Point Conversion is Good", true)
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
@@ -186,18 +198,18 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			end
 			IndicatorService._Direction *= -1
 			LiveService:ScoreUpdate("2PC")
-			GameService:Update({Down = 5})
+			GameService:Update({ Down = 5 })
 		end
 	elseif item == "A" then
 		if action == "P" then
-			GameService:Update({AwayScore = tonumber(amount)})
+			GameService:Update({ AwayScore = tonumber(amount) })
 			LiveService:ScoreUpdate()
 		elseif action == "M" then
-			GameService:Update({AwayScore = -tonumber(amount)})
+			GameService:Update({ AwayScore = -tonumber(amount) })
 			LiveService:ScoreUpdate()
 		elseif action == "F" then
-			GameService:Update({AwayScore = 3})
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ AwayScore = 3 })
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Field Goal is Good!", true)
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
@@ -224,9 +236,9 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			end
 			IndicatorService._Direction *= -1
 			LiveService:ScoreUpdate("FIELD GOAL")
-			GameService:Update({Down = 5})
-		elseif code:sub(2, len) then
-			GameService:Update({AwayScore = 6})
+			GameService:Update({ Down = 5 })
+		elseif code:sub(2, len) == "TD" then
+			GameService:Update({ AwayScore = 6 })
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
@@ -250,7 +262,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			end
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Touchdown!", true)
 			if DEBOUNCE == true then
 				DEBOUNCE = false
@@ -259,25 +271,25 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 				DEBOUNCE = true
 			end
 			LiveService:ScoreUpdate("TOUCHDOWN")
-			GameService:Update({Down = 6})
+			GameService:Update({ Down = 6 })
 		elseif code:sub(2, 3) == "TO" then
 			if code:sub(4, 4) == "M" then
 				if GameService.Values.Away.Timeouts == 0 then
 					return
 				end
 
-				GameService:Update({AwayTimeouts = -1})
-				GameService:Update({ClockRunning = false})
+				GameService:Update({ AwayTimeouts = -1 })
+				GameService:Update({ ClockRunning = false })
 				MessageService:Send(Players:GetPlayers(), player.Name .. ": Timeout Away")
 			else
 				if GameService.Values.Away.Timeouts == 3 then
 					return
 				end
-				GameService:Update({ClockRunning = false})
-				GameService:Update({AwayTimeouts = 1})
+				GameService:Update({ ClockRunning = false })
+				GameService:Update({ AwayTimeouts = 1 })
 			end
 		elseif code:sub(2, len) == "SFT" then
-			GameService:Update({AwayScore = 2})
+			GameService:Update({ AwayScore = 2 })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Safety Away", true)
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
@@ -304,9 +316,9 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			end
 			IndicatorService._Direction *= -1
 			LiveService:ScoreUpdate("SAFETY")
-			GameService:Update({Down = 5})
+			GameService:Update({ Down = 5 })
 		elseif code:sub(2, len) == "2P" then
-			GameService:Update({AwayScore = 2})
+			GameService:Update({ AwayScore = 2 })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": 2 Point Conversion is Good", true)
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
@@ -333,20 +345,20 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			end
 			IndicatorService._Direction *= -1
 			LiveService:ScoreUpdate("2PC")
-			GameService:Update({Down = 5})
+			GameService:Update({ Down = 5 })
 		end
 	elseif item == "C" then
 		if action == "P" then
-			GameService:Update({ClockValue = tonumber(amount)})
+			GameService:Update({ ClockValue = tonumber(amount) })
 		elseif action == "R" then
-			GameService:Update({ClockValue = 5 * 60})
+			GameService:Update({ ClockValue = (5 * 60) - GameService.Values.Clock.Value })
 		elseif code:sub(2, len) == "STP" then
 			ReplicatedStorage.ReplayRemote:FireAllClients({ "StopRecord" })
 			self:RunClock(false)
 		elseif code:sub(2, len) == "STA" then
 			self:RunClock(true)
 		elseif action == "M" then
-			GameService:Update({ClockValue = -tonumber(amount)})
+			GameService:Update({ ClockValue = -tonumber(amount) })
 		end
 	elseif item == "P" then
 		if code:sub(2, len) == "STA" then
@@ -364,25 +376,27 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 		elseif code:sub(2, len) == "STP" then
 			self:RunPC(false)
 		elseif code:sub(2, len) == "R" then
-			GameService:Update({PlayClockValue = 25})
+			GameService:Update({ PlayClockValue = 20 - GameService.Values.PlayClock.Value })
 		end
 	elseif item == "Q" then
 		if action == "M" then
-			GameService:Update({Quarter = if GameService.Values.Quarter > 1 then GameService.Values.Quarter - 1 else 1})
+			GameService:Update({
+				Quarter = if GameService.Values.Quarter > 1 then GameService.Values.Quarter - 1 else 1,
+			})
 		elseif action == "P" then
-			GameService:Update({Quarter = 1})
+			GameService:Update({ Quarter = 1 })
 		end
 	elseif item == "D" then
 		if action == "M" then
-			GameService:Update({Down = GameService.Values.Down > 1 and GameService.Values.Down - 1 or 1})
+			GameService:Update({ Down = GameService.Values.Down > 1 and GameService.Values.Down - 1 or 1 })
 		elseif action == "P" then
-			GameService:Update({Down = GameService.Values.Down < 5 and GameService.Values.own + 1 or 5})
+			GameService:Update({ Down = GameService.Values.Down < 5 and GameService.Values.Down + 1 or 5 })
 		end
 	else
 		if code == "K" then
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Completed Pass", true)
 		elseif code == "EOQ" then
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": End of Quarter", true)
 			LiveService:ScoreUpdate("EOQ")
 		elseif code == "FLG" then
@@ -391,8 +405,8 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 		elseif code == "FRC" then
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Fumble Recovery", true)
 		elseif code == "INC" then
-			GameService:Update({ClockRunning = false})
-			GameService:Update({Down = 1})
+			GameService:Update({ ClockRunning = false })
+			GameService:Update({ Down = 1 })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Incomplete Pass", true)
 			if LiveService._isPAT then
 				if IndicatorService._Direction == 1 then
@@ -423,8 +437,8 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			end
 			LiveService._isPAT = false
 		elseif code == "INCOOB" then
-			GameService:Update({ClockRunning = false})
-			GameService:Update({Down = 1})
+			GameService:Update({ ClockRunning = false })
+			GameService:Update({ Down = 1 })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Incomplete, Out of Boundaries", true)
 
 			if LiveService._isPAT then
@@ -462,10 +476,10 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 		elseif code == "LAT" then
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Lateral Pass", true)
 		elseif code == "LS" then
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Lag Sack", true)
 		elseif code == "OOB" then
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Out of Boundaries", true)
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
@@ -517,20 +531,20 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 				IndicatorService._Direction *= -1
 				LiveService:ScoreUpdate("2PCNG")
 			end
-			GameService:Update({Down = 1})
+			GameService:Update({ Down = 1 })
 		elseif code == "RMSG" then
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers())
 			self.Client.Event:FireAll("Reset")
 		elseif code == "RVW" then
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Reviewing the Previous Play", true)
 			self.Client.Event:FireAll("Review")
 		elseif code == "SACK" then
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Sack", true)
 		elseif code == "TB" then
-			GameService:Update({ClockRunning = false})
+			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Touchback", true)
 			if IndicatorService._Direction == 1 then
 				ChainsService.down.P.CFrame = CFrame.new(
@@ -555,7 +569,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			end
-			GameService:Update({Down = 1})
+			GameService:Update({ Down = 1 })
 		elseif code == "BALLPOS" then
 			self.Client.Event:FireAll("Pos")
 		elseif code == "FLGDEAD" then
@@ -583,47 +597,50 @@ function ScoreboardService:RunPC(bool: boolean)
 	end
 
 	if bool then
-		GameService:Update({PlayClockRunning = true})
+		GameService:Update({ PlayClockRunning = true })
 		ReplicatedStorage.Stats.LastQB.Value = "Off"
 
 		repeat
-			GameService:Update({PlayClockValue = 1})
-		until GameService.Values.PlayClock.Running == false
-			or GameService:Update({PlayClockValue = 0})
+			GameService:Update({ PlayClockValue = -1 })
+			task.spawn(function()
+				GameService.Client.SendValues:FireAll(GameService.Values)
+			end)
+			task.wait(1)
+		until GameService.Values.PlayClock.Running == false or GameService.Values.PlayClock.Value == 0
 
-		GameService:Update({PlayClockRunning = false})
+		GameService:Update({ PlayClockRunning = false })
 	else
-		GameService:Update({PlayClockRunning = false})
+		GameService:Update({ PlayClockRunning = false })
 	end
 end
 
 function ScoreboardService:RunClock(bool: boolean)
 	local GameService = Knit.GetService("GameService")
-
 	if bool and GameService.Values.Clock.Running then
 		return
 	end
-
 	if GameService.Values.Clock.Value == 0 then
 		return
 	end
-
 	self._AutoStop = false
 
 	if bool then
-		GameService:Update({ClockRunning = true})
+		GameService:Update({ ClockRunning = true })
 		repeat
-			GameService:Update({ClockValue = 1})
+			GameService:Update({ ClockValue = -1 })
+			task.spawn(function()
+				GameService.Client.SendValues:FireAll(GameService.Values)
+			end)
 			task.wait(1)
-		until GameService:Update({ClockRunning = false})
-			or GameService:Update({ClockValue = 0})
+		until GameService.Values.Clock.Running == false
+			or GameService.Values.Clock.Value == 0
 			or self._AutoStop == true
-		GameService:Update({ClockRunning = false})
+		GameService:Update({ ClockRunning = false })
 		self.Client.StopRecord:FireAll()
-		GameService:Update({ClockRunning = false})
+		GameService:Update({ ClockRunning = false })
 		self._AutoStop = false
 	else
-		GameService:Update({ClockRunning = false})
+		GameService:Update({ ClockRunning = false })
 		self._AutoStop = false
 	end
 end

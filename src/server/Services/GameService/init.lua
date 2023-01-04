@@ -46,30 +46,46 @@ function GameService:ClearBalls()
 end
 
 function GameService.Client:Get()
-	return self.Server.Values
+	return self.Server:Get()
+end
+
+function GameService:Get()
+	return self.Values
 end
 
 function GameService:Update(toupdate: table)
 	for i, v in pairs(toupdate) do
-		if toupdate == "HomeTimeouts" then
-			self.Values.Home.Timeouts += v
-		elseif toupdate == "HomeTeam" then
+		if i == "HomeTimeouts" then
+			if self.Values.Home.Timeouts + v >= 0 and self.Values.Home.Timeouts + v <= 3 then
+				self.Values.Home.Timeouts += v
+			end
+		elseif i == "HomeTeam" then
 			self.Values.Home.Team = v
-		elseif toupdate == "HomeScore" then
-			self.Values.Home.Score += v
-		elseif toupdate == "AwayTimeouts" then
-			self.Values.Away.Timeouts += v
-		elseif toupdate == "AwayTeam" then
+		elseif i == "HomeScore" then
+			if self.Values.Home.Score + v >= 0 then
+				self.Values.Home.Score += v
+			end
+		elseif i == "AwayTimeouts" then
+			if self.Values.Away.Timeouts + v >= 0 and self.Values.Away.Timeouts + v <= 3 then
+				self.Values.Away.Timeouts += v
+			end
+		elseif i == "AwayTeam" then
 			self.Values.Away.Team = v
-		elseif toupdate == "AwayScore" then
-			self.Values.Away.Score += v
-		elseif toupdate == "ClockRunning" then
+		elseif i == "AwayScore" then
+			if self.Values.Away.Score + v >= 0 then
+				self.Values.Away.Score += v
+			end
+		elseif i == "ClockRunning" then
 			self.Values.Clock.Running = v
-		elseif toupdate == "ClockValue" then
-			self.Values.Clock.Value += v
-		elseif toupdate == "PlayClockValue" then
-			self.Values.PlayClock.Value += v
-		elseif toupdate == "PlayClockRunning" then
+		elseif i == "ClockValue" then
+			if self.Values.Clock.Value + v >= 0 then
+				self.Values.Clock.Value += v
+			end
+		elseif i == "PlayClockValue" then
+			if self.Values.PlayClock.Value + v >= 0 then
+				self.Values.PlayClock.Value += v
+			end
+		elseif i == "PlayClockRunning" then
 			self.Values.PlayClock.Running = v
 		else
 			self.Values[i] = v
