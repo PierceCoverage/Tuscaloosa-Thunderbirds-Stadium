@@ -61,6 +61,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Field Goal is Good!", true)
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = -150 + 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					-150 + 90,
 					ChainsService.down.P.Position.Y,
@@ -72,6 +73,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = 150 - 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
 					ChainsService.down.P.Position.Y,
@@ -89,6 +91,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 		elseif code:sub(2, len) == "TD" then
 			GameService:Update({ HomeScore = 6 })
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = 150 - 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
 					ChainsService.down.P.Position.Y,
@@ -100,6 +103,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = -150 + 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					-150 + 90,
 					ChainsService.down.P.Position.Y,
@@ -142,6 +146,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Safety Home", true)
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = -150 + 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					-150 + 90,
 					ChainsService.down.P.Position.Y,
@@ -153,6 +158,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = 150 - 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
 					ChainsService.down.P.Position.Y,
@@ -172,6 +178,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": 2 Point Conversion is Good", true)
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = -150 + 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					-150 + 90,
 					ChainsService.down.P.Position.Y,
@@ -183,6 +190,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = 150 - 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
 					ChainsService.down.P.Position.Y,
@@ -210,6 +218,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Field Goal is Good!", true)
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = -150 + 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					-150 + 90,
 					ChainsService.down.P.Position.Y,
@@ -221,6 +230,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = 150 - 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
 					ChainsService.down.P.Position.Y,
@@ -238,6 +248,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 		elseif code:sub(2, len) == "TD" then
 			GameService:Update({ AwayScore = 6 })
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = 150 - 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
 					ChainsService.down.P.Position.Y,
@@ -249,6 +260,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = -150 + 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					-150 + 90,
 					ChainsService.down.P.Position.Y,
@@ -291,6 +303,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			GameService:Update({ AwayScore = 2 })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Safety Away", true)
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = -150 + 90})
 				ChainsService.down.P.CFrame = CFrame.new(
 					-150 + 90,
 					ChainsService.down.P.Position.Y,
@@ -302,6 +315,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = 150 - 90})
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
 					ChainsService.down.P.Position.Y,
@@ -320,6 +334,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			GameService:Update({ AwayScore = 2 })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": 2 Point Conversion is Good", true)
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = -150 + 90})
 				ChainsService.down.P.CFrame = CFrame.new(
 					-150 + 90,
 					ChainsService.down.P.Position.Y,
@@ -331,6 +346,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = 150 - 90})
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 90,
 					ChainsService.down.P.Position.Y,
@@ -411,6 +427,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Incomplete Pass", true)
 			if LiveService._isPAT then
 				if IndicatorService._Direction == 1 then
+					GameService:Update({ Position = -60 })
 					ChainsService.down.P.CFrame = CFrame.new(
 						-150 + 90,
 						ChainsService.down.P.Position.Y,
@@ -422,6 +439,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 						ChainsService.first.P.Position.Z
 					) * CFrame.Angles(0, math.rad(-90), 0)
 				elseif IndicatorService._Direction == -1 then
+					GameService:Update({ Position = 60 })
 					ChainsService.down.P.CFrame = CFrame.new(
 						150 - 90,
 						ChainsService.down.P.Position.Y,
@@ -444,6 +462,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 
 			if LiveService._isPAT then
 				if IndicatorService._Direction == 1 then
+					GameService:Update({ Position = -60 })
 					ChainsService.down.P.CFrame = CFrame.new(
 						-150 + 90,
 						ChainsService.down.P.Position.Y,
@@ -455,6 +474,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 						ChainsService.first.P.Position.Z
 					) * CFrame.Angles(0, math.rad(-90), 0)
 				elseif IndicatorService._Direction == -1 then
+					GameService:Update({ Position = 60 })
 					ChainsService.down.P.CFrame = CFrame.new(
 						150 - 90,
 						ChainsService.down.P.Position.Y,
@@ -471,6 +491,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			LiveService._isPAT = false
 		elseif code == "INT" then
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Interception", true)
+			GameService:Update({ Possession = not GameService.Values.Possession})
 			self.Client.Event:FireAll("Pos")
 			LiveService._intedByHome = GameService:HomeTeamHasBall()
 			LiveService:ScoreUpdate("INTERCEPTION")
@@ -483,6 +504,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Out of Boundaries", true)
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = -30 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					-30,
 					ChainsService.down.P.Position.Y,
@@ -494,6 +516,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = 30 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					30,
 					ChainsService.down.P.Position.Y,
@@ -507,6 +530,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			end
 			if LiveService._isPAT then
 				if IndicatorService._Direction == 1 then
+					GameService:Update({ Position = -60 })
 					ChainsService.down.P.CFrame = CFrame.new(
 						-150 + 90,
 						ChainsService.down.P.Position.Y,
@@ -518,6 +542,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 						ChainsService.first.P.Position.Z
 					) * CFrame.Angles(0, math.rad(-90), 0)
 				elseif IndicatorService._Direction == -1 then
+					GameService:Update({ Position = 60 })
 					ChainsService.down.P.CFrame = CFrame.new(
 						150 - 90,
 						ChainsService.down.P.Position.Y,
@@ -535,7 +560,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			GameService:Update({ Down = 1 })
 		elseif code == "RMSG" then
 			GameService:Update({ ClockRunning = false })
-			MessageService:Send(Players:GetPlayers())
+			MessageService:Send(Players:GetPlayers(), "")
 			self.Client.Event:FireAll("Reset")
 		elseif code == "RVW" then
 			GameService:Update({ ClockRunning = false })
@@ -548,6 +573,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			GameService:Update({ ClockRunning = false })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Touchback", true)
 			if IndicatorService._Direction == 1 then
+				GameService:Update({ Position = -90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					-150 + 60,
 					ChainsService.down.P.Position.Y,
@@ -559,6 +585,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 					ChainsService.first.P.Position.Z
 				) * CFrame.Angles(0, math.rad(-90), 0)
 			elseif IndicatorService._Direction == -1 then
+				GameService:Update({ Position = 90 })
 				ChainsService.down.P.CFrame = CFrame.new(
 					150 - 60,
 					ChainsService.down.P.Position.Y,
@@ -600,7 +627,7 @@ function ScoreboardService:RunPC(bool: boolean)
 	if bool then
 		GameService:Update({ PlayClockRunning = true })
 		ReplicatedStorage.Stats.LastQB.Value = "Off"
-		task.delay(0.5, function()
+		task.delay(0.1, function()
 			repeat
 				GameService:Update({ PlayClockValue = -1 })
 				task.spawn(function()
@@ -628,7 +655,7 @@ function ScoreboardService:RunClock(bool: boolean)
 
 	if bool then
 		GameService:Update({ ClockRunning = true })
-		task.delay(0.5, function()
+		task.delay(0.1, function()
 			repeat
 				GameService:Update({ ClockValue = -1 })
 				task.spawn(function()

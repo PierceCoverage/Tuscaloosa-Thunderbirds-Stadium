@@ -87,6 +87,8 @@ function GameService:Update(toupdate: table)
 			end
 		elseif i == "PlayClockRunning" then
 			self.Values.PlayClock.Running = v
+		elseif i == "Ball" then
+			self.Values[i] = v
 		else
 			self.Values[i] = v
 		end
