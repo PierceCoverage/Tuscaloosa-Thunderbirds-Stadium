@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Teams = game:GetService("Teams")
+
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local TeamService = Knit.CreateService({
@@ -62,6 +63,12 @@ function TeamService:KnitInit()
 		table.insert(self._TeamData, team)
 		if team.TeamData.PlaceId == game.PlaceId then
 			self._HomeTeam = team
+
+			local Team = Instance.new("Team")
+			Team.Name = team.TeamData.Name
+			Team.TeamColor = team.ColorData.Primary.BrickColor
+			Team.AutoAssignable = false
+			Team.Parent = Teams
 		end
 	end
 

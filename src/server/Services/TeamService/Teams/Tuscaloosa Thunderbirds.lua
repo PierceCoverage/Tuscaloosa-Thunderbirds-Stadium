@@ -1,12 +1,12 @@
 return {
 	ColorData = {
 		Primary = {
-			BrickColor = BrickColor.new(Color3.fromRGB(196, 0, 0)),
-			Color = Color3.fromRGB(196, 0, 0),
+			BrickColor = BrickColor.new(Color3.fromRGB(0, 92, 185)),
+			Color = Color3.fromRGB(0, 92, 185),
 		},
 		Secondary = {
-			BrickColor = BrickColor.new(Color3.fromRGB(0, 92, 85)),
-			Color = Color3.fromRGB(0, 92, 85),
+			BrickColor = BrickColor.new(Color3.fromRGB(196, 0, 0)),
+			Color = Color3.fromRGB(196, 0, 0),
 		},
 	},
 	LeagueData = {
