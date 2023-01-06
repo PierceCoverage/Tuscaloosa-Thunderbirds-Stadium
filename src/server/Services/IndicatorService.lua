@@ -4,7 +4,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local IndicatorService = Knit.CreateService({
 	Name = "IndicatorService",
-	Client = {},
 	_OldColor1 = nil,
 	_OldColor2 = nil,
 	_TackleDebounce = false,

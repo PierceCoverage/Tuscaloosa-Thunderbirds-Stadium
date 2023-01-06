@@ -5,7 +5,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local GamelockService = Knit.CreateService({
 	Name = "GamelockService",
-	Client = {},
 	_GameLock = false,
 	Boundaries = {
 		xMax = 0,

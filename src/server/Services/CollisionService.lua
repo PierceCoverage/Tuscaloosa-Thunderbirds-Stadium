@@ -4,7 +4,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local CollisionService = Knit.CreateService({
 	Name = "CollisionService",
-	Client = {},
 })
 
 function CollisionService:KnitStart()

@@ -4,7 +4,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local LiveService = Knit.CreateService({
 	Name = "LiveService",
-	Client = {},
 	_isGame = false,
 	_isPAT = false,
 	_intedByHome = false,

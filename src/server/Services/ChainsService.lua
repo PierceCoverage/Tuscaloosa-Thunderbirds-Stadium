@@ -4,7 +4,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local ChainsService = Knit.CreateService({
 	Name = "ChainsService",
-	Client = {},
 	fdown = workspace.Fdown,
 	scrimmage = workspace.scrimmage,
 	down = workspace.down,

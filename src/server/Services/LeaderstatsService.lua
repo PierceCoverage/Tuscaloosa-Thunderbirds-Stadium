@@ -6,7 +6,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local LeaderstatsService = Knit.CreateService({
 	Name = "LeaderstatsService",
-	Client = {},
 	url = "https://NFL-Bot.ethanwaike.repl.co", --ADD YOUR URL HERE
 })
 
