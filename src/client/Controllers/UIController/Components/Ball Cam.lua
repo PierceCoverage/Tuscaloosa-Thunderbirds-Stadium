@@ -13,18 +13,6 @@ function Button:init()
 	}
 end
 
-function find_ball()
-	for i, v in pairs(workspace:GetDescendants()) do
-		if v.Name == "Football" then
-			if v:IsA("Tool") then
-				return v:FindFirstChild("Handle")
-			else
-				return v
-			end
-		end
-	end
-end
-
 function Button:render()
 	return Roact.createElement("TextButton", {
 		Size = UDim2.new(0, 100, 0, 30),
@@ -44,24 +32,18 @@ function Button:render()
 			if self.state.enabled then
 				while self.state.enabled do
 					CurrentCamera.CameraSubject = GameController.Values.Ball
-					task.wait(1/10)
+					task.wait(1 / 10)
 				end
 			else
 				CurrentCamera.CameraSubject = Players.LocalPlayer.Character.Humanoid
 				CurrentCamera.FieldOfView = 70
 			end
-
-			
 		end,
 	}, {
 		UICorner = Roact.createElement("UICorner", {
 			CornerRadius = UDim.new(0, 8),
 		}),
 	})
-end
-
-function Button:didMount()
-	print("Mounted!")
 end
 
 return Button
