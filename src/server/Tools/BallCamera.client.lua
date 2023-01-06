@@ -10,7 +10,7 @@ local Watching = false
 local Tool = script.Parent
 
 Tool.Equipped:Connect(function(mouse)
-	mouse.Button1Down:Connect(function(mouse)
+	mouse.Button1Down:Connect(function()
 		Watching = not Watching
 
 		if Watching then --Start watching
@@ -18,14 +18,15 @@ Tool.Equipped:Connect(function(mouse)
 				CurrentCamera.CameraSubject = GameController.Values.Ball
 				task.wait(1 / 10)
 			end
-		else --Stop watching
-			CurrentCamera.CameraSubject = Players.LocalPlayer.Character.Humanoid
-			CurrentCamera.FieldOfView = 70
 		end
+
+		CurrentCamera.CameraSubject = Players.LocalPlayer.Character.Humanoid
+		CurrentCamera.FieldOfView = 70
 	end)
 end)
 
 Tool.Unequipped:Connect(function()
+	Watching = false
 	CurrentCamera.CameraSubject = Players.LocalPlayer.Character.Humanoid
 	CurrentCamera.FieldOfView = 70
 end)
