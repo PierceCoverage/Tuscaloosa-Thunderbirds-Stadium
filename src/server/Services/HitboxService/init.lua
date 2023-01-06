@@ -3,6 +3,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
+local HitboxClass = require(script.HitboxClass)
+
 local HitboxService = Knit.CreateService({
 	Name = "HitboxService",
 	Client = {
@@ -17,16 +19,11 @@ end
 function HitboxService:KnitInit()
 	Players.PlayerAdded:Connect(function(player)
 		player.CharacterAdded:Connect(function(character)
-			local Jersey = ServerScriptService:WaitForChild("assets").Jersey:Clone()
-			local Weld = Instance.new("Weld")
+			local Hitbox = HitboxClass.new(character)
 
-			Jersey.Script.Disabled = false
-
-			Weld.Part0 = character:WaitForChild("HumanoidRootPart")
-			Weld.Part1 = Jersey
-
-			Weld.Parent = Jersey
-			Jersey.Parent = character
+			character.Destroying:Connect(function()
+				Hitbox:Destroy()
+			end)
 		end)
 	end)
 
