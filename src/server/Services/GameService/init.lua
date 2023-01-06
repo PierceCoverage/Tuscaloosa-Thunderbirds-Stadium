@@ -54,6 +54,7 @@ function GameService:Get()
 end
 
 function GameService:Update(toupdate: table)
+	assert(type(toupdate) == "table", "Must be a table.")
 	for i, v in pairs(toupdate) do
 		if i == "HomeTimeouts" then
 			if self.Values.Home.Timeouts + v >= 0 and self.Values.Home.Timeouts + v <= 3 then
