@@ -22,8 +22,6 @@ Tool.Equipped:Connect(function(mouse)
 			CurrentCamera.CameraSubject = Players.LocalPlayer.Character.Humanoid
 			CurrentCamera.FieldOfView = 70
 		end
-
-		Watching = not Watching
 	end)
 end)
 
