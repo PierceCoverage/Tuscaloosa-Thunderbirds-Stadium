@@ -5,7 +5,9 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local HitboxService = Knit.CreateService({
 	Name = "HitboxService",
-	Client = {},
+	Client = {
+		Block = Knit.CreateSignal(),
+	},
 })
 
 function HitboxService:KnitStart()
@@ -19,7 +21,6 @@ function HitboxService:KnitInit()
 			local Weld = Instance.new("Weld")
 
 			Jersey.Script.Disabled = false
-			Jersey.Onside.Disabled = not ReplicatedStorage.OnsideFlag.Value
 
 			Weld.Part0 = character:WaitForChild("HumanoidRootPart")
 			Weld.Part1 = Jersey
