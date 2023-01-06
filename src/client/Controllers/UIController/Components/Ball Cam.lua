@@ -7,7 +7,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local Button = Roact.Component:extend("Button")
 
 function Button:init()
-	print("initing")
 	self.state = {
 		enabled = false,
 	}

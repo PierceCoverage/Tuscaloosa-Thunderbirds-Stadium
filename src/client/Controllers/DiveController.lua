@@ -159,7 +159,6 @@ function DiveController:OPDive()
 end
 
 function DiveController:Dive()
-	print("Diving")
 	if self:HasBall() then
 		if self.Character.Humanoid.PlatformStand and self.CanJump then -- Tackled
 			--print("Backspace get up")

@@ -14,7 +14,6 @@ function GameController:KnitStart()
     end)
 
     GameService.SendValues:Connect(function(v)
-        print(v.Ball)
 		self.Values = v
 	end)
 
