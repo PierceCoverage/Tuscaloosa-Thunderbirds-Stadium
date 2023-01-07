@@ -40,7 +40,7 @@ function UIController:KnitInit()
 			ElementTable[v.Name] = tempElement
 		end
 
-		local Interface = Roact.createElement("ScreenGui", { Name = "Interface" }, ElementTable)
+		local Interface = Roact.createElement("ScreenGui", { Name = "Interface", ResetOnSpawn = false }, ElementTable)
 		Roact.mount(Interface, Players.LocalPlayer.PlayerGui)
 	end)
 

@@ -39,7 +39,12 @@ local function team_check(p1, p2)
 end
 
 local function tackle_or_block(c1, c2)
-	if c1:FindFirstChild("Football") or c2:FindFirstChild("Football") then
+	if
+		c1:FindFirstChild("Football")
+		or Players:FindFirstChild(c1.Name).Backpack:FindFirstChild("Football")
+		or c2:FindFirstChild("Football")
+		or Players:FindFirstChild(c2.Name).Backpack:FindFirstChild("Football")
+	then
 		return "tackle"
 	else
 		return "block"
@@ -60,17 +65,17 @@ local function magnitude_check(j1, j2)
 
 	if players_diving == 2 then
 		--Two Players Diving
-		if distance > 5 * 3 then --5 Yards
+		if distance > 7 * 3 then --5 Yards
 			return false
 		end
 	elseif players_diving == 1 then
 		--One Player Diving
-		if distance > 4 * 3 then --4 Yards
+		if distance > 6 * 3 then --4 Yards
 			return false
 		end
 	else
 		--No Players Diving
-		if distance > 3 * 3 then --3 Yards
+		if distance > 5 * 3 then --3 Yards
 			return false
 		end
 	end
@@ -102,43 +107,60 @@ function HitboxClass.new(character): table --returns a Hitbox
 			return
 		end
 
-		self.Debounce = true
-
-		task.delay(0.25, function()
-			self.Debounce = false
-		end)
-
 		if Part.Name == "Hitbox" then
-			if magnitude_check(self.Hitbox, Part) then
-				if Part.Parent:FindFirstChild("Humanoid") then
-					local OtherPlayer = Players:GetPlayerFromCharacter(Part.Parent)
+			--if magnitude_check(self.Hitbox, Part) then
+			if Part.Parent:FindFirstChild("Humanoid") then
+				local OtherPlayer = Players:GetPlayerFromCharacter(Part.Parent)
 
-					if team_check(self._Player, OtherPlayer) then
-						local situation = tackle_or_block(character, Part.Parent)
-						if situation == "tackle" then
-							local distance = (self.Hitbox.Position - Part.Position).Magnitude / 3
-							distance = math.floor(distance * 100) / 100
+				if team_check(self._Player, OtherPlayer) then
+					local situation = tackle_or_block(character, Part.Parent)
+					if situation == "tackle" then
+						self.Debounce = true
 
-							if character:FindFirstChild("Football") then
-								IndicatorService:Fire(character:FindFirstChild("Football").Handle.Position.X)
-							else
-								IndicatorService:Fire(Part.Parent:FindFirstChild("Football").Handle.Position.X)
-							end
+						task.delay(0.25, function()
+							self.Debounce = false
+						end)
 
-							character.Humanoid.PlatformStand = true
+						local distance = (self.Hitbox.Position - Part.Position).Magnitude / 3
+						distance = math.floor(distance * 100) / 100
 
-							task.delay(2.5, function()
-								character.Humanoid.PlatformStand = false
-							end)
-						elseif situation == "block" then
-							HitboxService.Client.Block:Fire(
-								self._Player,
-								Part.Parent.HumanoidRootPart.CFrame.LookVector
-							)
-						end --Returning nil would indicate the players are on the same team or on a team that is not tackleable.
-					end
+						MessageService:Send(
+							Players:GetPlayers(),
+							("%s tackled %s from %s yards away."):format(
+								self._Player.Name,
+								OtherPlayer.Name,
+								tostring(distance)
+							),
+							"Tackle"
+						)
+
+						if character:FindFirstChild("Football") then
+							IndicatorService:Fire(character:FindFirstChild("Football").Handle.Position.X)
+						else
+							IndicatorService:Fire(Part.Parent:FindFirstChild("Football").Handle.Position.X)
+						end
+
+						character.Humanoid.PlatformStand = true
+						Part.Parent.Humanoid.PlatformStand = true
+
+						task.delay(2.5, function()
+							character.Humanoid.PlatformStand = false
+							Part.Parent.Humanoid.PlatformStand = false
+						end)
+					elseif situation == "block" then
+						self.Debounce = true
+
+						task.delay(0.25, function()
+							self.Debounce = false
+						end)
+
+						HitboxService.Client.Block:Fire(self._Player, Part.Parent.HumanoidRootPart.CFrame.LookVector)
+
+						HitboxService.Client.Block:Fire(OtherPlayer, character.HumanoidRootPart.CFrame.LookVector)
+					end --Returning nil would indicate the players are on the same team or on a team that is not tackleable.
 				end
 			end
+			--end
 		end
 	end))
 
