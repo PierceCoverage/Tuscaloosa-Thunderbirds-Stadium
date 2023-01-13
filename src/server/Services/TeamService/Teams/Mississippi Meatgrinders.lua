@@ -28,6 +28,6 @@ return {
 		Initials = "MS",
 		Logo = 0, --needs to be added to roblox
 		Name = "Missisippi Meatgrinders",
-		PlaceId = 0, --need to create place, don't change
+		PlaceId = 12125862795,
 	},
 }

@@ -28,6 +28,6 @@ return {
 		Initials = "SEA",
 		Logo = 0, --needs to be added to roblox
 		Name = "Seattle Reign",
-		PlaceId = 0, --need to create place, don't change
+		PlaceId = 11886080596, --need to create place, don't change
 	},
 }

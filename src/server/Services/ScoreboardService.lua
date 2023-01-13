@@ -423,7 +423,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Fumble Recovery", true)
 		elseif code == "INC" then
 			GameService:Update({ ClockRunning = false })
-			GameService:Update({ Down = 1 })
+			GameService:Update({ Down = GameService.Values.Down + 1 })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Incomplete Pass", true)
 			if LiveService._isPAT then
 				if IndicatorService._Direction == 1 then
@@ -457,7 +457,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 			LiveService._isPAT = false
 		elseif code == "INCOOB" then
 			GameService:Update({ ClockRunning = false })
-			GameService:Update({ Down = 1 })
+			GameService:Update({ Down = GameService.Values.Down + 1 })
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Incomplete, Out of Boundaries", true)
 
 			if LiveService._isPAT then

@@ -28,6 +28,6 @@ return {
 		Initials = "TUS",
 		Logo = 0, --needs to be added to roblox
 		Name = "Tuscaloosa Thunderbirds",
-		PlaceId = 11886080596, --need to create place, don't change
+		PlaceId = 0, --need to create place, don't change
 	},
 }
