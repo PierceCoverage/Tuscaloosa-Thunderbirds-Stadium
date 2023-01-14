@@ -78,7 +78,7 @@ function BindsController:KnitInit()
         self:ReceiveButtonPress(key)
     end)
 
-    UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
         if gameProcessedEvent then
             return
         end

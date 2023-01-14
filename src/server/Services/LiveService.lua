@@ -136,9 +136,9 @@ function LiveService:ScoreUpdate(update_type)
 				local message = string.format(
 					formatting,
 					text,
-					winning_team_emoji,
+					"",
 					winning_score,
-					losing_team_emoji,
+					"",
 					losing_score,
 					quarter_message,
 					clock_message,
@@ -151,9 +151,9 @@ function LiveService:ScoreUpdate(update_type)
 				local message = string.format(
 					formatting,
 					text,
-					winning_team_emoji,
+					"",
 					winning_score,
-					losing_team_emoji,
+					"",
 					losing_score,
 					quarter_message,
 					clock_message,

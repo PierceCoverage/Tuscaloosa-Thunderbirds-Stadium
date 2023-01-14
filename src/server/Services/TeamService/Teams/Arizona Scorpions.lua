@@ -1,12 +1,12 @@
 return {
 	ColorData = {
 		Primary = {
-			BrickColor = BrickColor.new(Color3.fromRGB(207, 2, 32)),
-			Color = Color3.fromRGB(207, 2, 32),
+			BrickColor = BrickColor.new(Color3.fromRGB(152, 24, 46)),
+			Color = Color3.fromRGB(152, 24, 46),
 		},
 		Secondary = {
-			BrickColor = BrickColor.new(Color3.fromRGB(147, 147, 147)),
-			Color = Color3.fromRGB(147, 147, 147),
+			BrickColor = BrickColor.new(Color3.fromRGB(232, 214, 178)),
+			Color = Color3.fromRGB(Color3.fromRGB(232, 214, 178)),
 		},
 	},
 	LeagueData = {
@@ -17,17 +17,17 @@ return {
 		},
 	},
 	LocationData = { --No location data yet so don't do this category
-		City = "Seattle",
+		City = "Phoenix",
 		Dome = false,
 		Latitude = 42.361145,
 		Longitude = -71.057083,
-		State = "WA",
+		State = "AZ",
 	},
 	TeamData = {
-		RoleId = 1056951625362722908,
-		Initials = "SEA",
+		RoleId = 1056956352263618560,
+		Initials = "AZ",
 		Logo = 0, --needs to be added to roblox
-		Name = "Seattle Reign",
+		Name = "Arizona Scorpions",
 		PlaceId = 0, --need to create place, don't change
 	},
 }

@@ -18,6 +18,7 @@ local function create_part()
 	Part.Transparency = 1
 	Part.Massless = true
 	Part.Anchored = false
+	Part.CanCollide = false
 	Part.Name = "Hitbox"
 	return Part
 end
@@ -39,13 +40,13 @@ local function team_check(p1, p2)
 end
 
 local function tackle_or_block(c1, c2)
-	if
-		c1:FindFirstChild("Football")
+	local fb = c1:FindFirstChild("Football")
 		or Players:FindFirstChild(c1.Name).Backpack:FindFirstChild("Football")
 		or c2:FindFirstChild("Football")
 		or Players:FindFirstChild(c2.Name).Backpack:FindFirstChild("Football")
-	then
-		return "tackle"
+
+	if fb then
+		return "tackle", fb
 	else
 		return "block"
 	end
@@ -113,7 +114,7 @@ function HitboxClass.new(character): table --returns a Hitbox
 				local OtherPlayer = Players:GetPlayerFromCharacter(Part.Parent)
 
 				if team_check(self._Player, OtherPlayer) then
-					local situation = tackle_or_block(character, Part.Parent)
+					local situation, fb = tackle_or_block(character, Part.Parent)
 					if situation == "tackle" then
 						self.Debounce = true
 
@@ -134,11 +135,13 @@ function HitboxClass.new(character): table --returns a Hitbox
 							"Tackle"
 						)
 
-						if character:FindFirstChild("Football") then
-							IndicatorService:Fire(character:FindFirstChild("Football").Handle.Position.X)
-						else
-							IndicatorService:Fire(Part.Parent:FindFirstChild("Football").Handle.Position.X)
+						if fb then
+							if fb:IsA("Tool") then
+								fb = fb:FindFirstChild("Handle")
+							end
 						end
+
+						IndicatorService:Fire(fb.Position.X)
 
 						character.Humanoid.PlatformStand = true
 						Part.Parent.Humanoid.PlatformStand = true

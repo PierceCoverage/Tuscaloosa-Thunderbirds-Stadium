@@ -22,7 +22,7 @@ function IndicatorService:Fire(z)
 		positionIndicator.CFrame = CFrame.new(z, workspace.scrimmage.CFrame.Y, workspace.scrimmage.CFrame.Z)
 		positionIndicator.BrickColor = BrickColor.new("Bright red")
 		GameService:Update({ ClockRunning = false })
-		local update_table = { Position = z }
+		local update_table = { LastTackle = z }
 
 		if self._Direction == 1 then
 			update_table["StatYard"] = math.floor(z - workspace.scrimmage.Position.X) / 3
@@ -30,7 +30,7 @@ function IndicatorService:Fire(z)
 			update_table["StatYard"] = math.floor(workspace.scrimmage.Position.X - z) / 3
 		end
 
-		--GameService:Update(update_table)
+		GameService:Update(update_table)
 
 		task.delay(self.DebounceLength, function()
 			self._TackleDebounce = false

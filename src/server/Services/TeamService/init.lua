@@ -72,6 +72,12 @@ function TeamService:KnitStart()
 				v.Color = self._HomeTeam.ColorData.Secondary.Color
 			end
 		end
+
+		for i, v in pairs(workspace.Field["Field Grass"]:GetChildren()) do
+			if v.Name == "Endzone" then
+				v.Color = self._HomeTeam.ColorData.Primary.Color
+			end
+		end
 	end)
 	print("TeamService Started")
 end

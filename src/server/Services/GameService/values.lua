@@ -32,4 +32,5 @@ return {
 		Team = nil,
 		Timeouts = 3,
 	},
+	LastTackle = 0,
 }
