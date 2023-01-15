@@ -1,58 +1,65 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local HighlightClass = require(script.Parent.Parent.Classes.HighlightClass)
 
 local DBLOSService = Knit.CreateService({
 	Name = "DBLOSService",
 	Client = {},
-	Players = {},
+	Diving = {},
+	Highlight = {},
 })
 
 function DBLOSService.Client:Fire(player: Player)
-	return DBLOSService.Server:Fire(player)
+	return self.Server:Fire(player)
 end
 
 function DBLOSService:Fire(player: Player)
 	local ChainsService = Knit.GetService("ChainsService")
 	local GameService = Knit.GetService("GameService")
-	local IndicatorService = Knit.GetService("IndicatorService")
+	local ChatMessageService = Knit.GetService("ChatMessageService")
 
-	if player.TeamColor == GameService.Values.Home.Team or player.TeamColor == GameService.Values.Away.Team then
-		if
-			player.Character
-			and player.Character.HumanoidRootPart.Position.Z < 80
-			and player.Character.HumanoidRootPart.Position.Z > -80
-			and player.Character.HumanoidRootPart.Position.X < 180
-			and player.Character.HumanoidRootPart.Position.X > -180
-			and player.Character.HumanoidRootPart.Position.X
-			and GameService.Values["DBLOS"][player.Name]
-		then
+	if player.Team == GameService.Values.Home.Team or player.Team == GameService.Values.Away.Team then
+		if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+			self.Diving[player.Name] = true
+			task.delay(3, function()
+				self.Diving[player.Name] = false
+			end)
 			if
-				IndicatorService._Direction == 1
-				and player.Character.HumanoidRootPart.Position.X > ChainsService.down.Position.X
+				ChainsService._Direction == -1
+				and player.Character.HumanoidRootPart.Position.X > ChainsService.down.P.Position.X
 			then
-				local old_value = GameService.Values["DBLOS"]
-				table.insert(old_value, player.Name)
-				GameService:Update("DBLOS", old_value)
-				task.delay(5, function()
-					old_value = GameService.Values["DBLOS"]
-					for i, v in pairs(old_value) do
-						if v == player.Name then
-							table.remove(old_value, i)
-						end
-					end
-					GameService:Update("DBLOS", old_value)
+				if self.Highlight[player.Name] then
+					return
+				end
+				for i, v in pairs(Players:GetPlayers()) do
+					task.spawn(function()
+						ChatMessageService:Send(v, player.Name .. " dove behind the LOS!")
+					end)
+				end
+				self.Highlight[player.Name] = HighlightClass.new(workspace:FindFirstChild(player.Name), "dblos")
+
+				task.delay(3, function()
+					self.Highlight[player.Name]:Destroy()
+					self.Highlight[player.Name] = nil
 				end)
 			elseif
-				IndicatorService._Direction == -1
-				and player.Character.HumanoidRootPart.Position.X < ChainsService.down.Position.X
+				ChainsService._Direction == 1
+				and player.Character.HumanoidRootPart.Position.X < ChainsService.down.P.Position.X
 			then
-				table.insert(self.Players, player.Name)
-				task.delay(5, function()
-					for i, v in pairs(self.Players) do
-						if v == player.Name then
-							table.remove(self.Players, i)
-						end
-					end
+				if self.Highlight[player.Name] then
+					return
+				end
+				for i, v in pairs(Players:GetPlayers()) do
+					task.spawn(function()
+						ChatMessageService:Send(v, player.Name .. " dove behind the LOS!")
+					end)
+				end
+				self.Highlight[player.Name] = HighlightClass.new(workspace:FindFirstChild(player.Name), "dblos")
+				task.delay(3, function()
+					self.Highlight[player.Name]:Destroy()
+					self.Highlight[player.Name] = nil
 				end)
 			end
 		end

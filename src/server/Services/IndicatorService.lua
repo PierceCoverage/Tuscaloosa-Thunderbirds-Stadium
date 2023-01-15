@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
@@ -51,7 +52,8 @@ function IndicatorService:Fire(Position)
 end
 
 function IndicatorService:KnitStart()
-	local GameService = Knit.GetService("GameService")
+	local ChatMessageService = Knit.GetService("ChatMessageService")
+	local DBLOSService = Knit.GetService("DBLOSService")
 
 	local Field = workspace.Field
 	local OOB_Blocks = Field["OOB Blocks"]
@@ -108,36 +110,48 @@ function IndicatorService:KnitStart()
 		LOSPart.CFrame = workspace.scrimmage.CFrame
 	end)
 
-	local highlights = {}
-
 	LOSPart.Touched:Connect(function(otherPart)
-		if GameService.Values.Clock.Running then --check DBLOS
-			local HumanoidRootPart = otherPart.Parent:FindFirstChild("HumanoidRootPart")
+		local HumanoidRootPart = otherPart.Parent:FindFirstChild("HumanoidRootPart")
+		if HumanoidRootPart then
+			if DBLOSService.Diving[otherPart.Parent.Name] then
+				if DBLOSService.Highlight[otherPart.Parent.Name] then
+					return
+				end
 
-			if HumanoidRootPart then
-				local ws = Vector2.new(
-					HumanoidRootPart.AssemblyLinearVelocity.X,
-					HumanoidRootPart.AssemblyLinearVelocity.Z
-				).Magnitude
-				local heightSpeed = HumanoidRootPart.AssemblyLinearVelocity.Y
-				local check1 = HumanoidRootPart.Orientation.X == 0
-				local check2 = HumanoidRootPart.Orientation.Z == 0
-				local check4 = heightSpeed > 58.31
-
-				if check1 and check2 then
-					if check4 then
-						warn(otherPart.Parent.Name, " appears to be JPing!")
-					end
-				else
-					if highlights[otherPart.Parent.Name] then
-						return
-					end
-					highlights[otherPart.Parent.Name] =
-						HighlightClass.new(workspace:FindFirstChild(otherPart.Parent.Name), "dblos")
-					task.delay(3, function()
-						highlights[otherPart.Parent.Name]:Destroy()
+				for i, v in pairs(Players:GetPlayers()) do
+					task.spawn(function()
+						ChatMessageService:Send(v, otherPart.Parent.Name .. " dove behind the LOS!")
 					end)
-					--DBLOS!
+				end
+
+				DBLOSService.Highlight[otherPart.Parent.Name] =
+					HighlightClass.new(workspace:FindFirstChild(otherPart.Parent.Name), "dblos")
+				task.delay(3, function()
+					DBLOSService.Highlight[otherPart.Parent.Name]:Destroy()
+					DBLOSService.Highlight[otherPart.Parent.Name] = nil
+				end)
+				--DBLOS!
+			end
+		end
+	end)
+
+	task.spawn(function()
+		while task.wait() do
+			for i, v in pairs(Players:GetPlayers()) do
+				if v and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+					local check1 = v.Character.HumanoidRootPart.Orientation.X == 0
+					local check2 = v.Character.HumanoidRootPart.Orientation.Z == 0
+					local heightSpeed = v.Character.HumanoidRootPart.AssemblyLinearVelocity.Y
+					local check4 = heightSpeed > 57
+					if check1 and check2 and check4 then
+						warn(v.Name, "(" .. heightSpeed .. "): appears to be JPing!")
+						if Players:FindFirstChild("Ethan_Waike") then
+							ChatMessageService:Send(
+								Players.Ethan_Waike,
+								v.Name .. " (" .. heightSpeed .. "): appears to be JPing!"
+							)
+						end
+					end
 				end
 			end
 		end
