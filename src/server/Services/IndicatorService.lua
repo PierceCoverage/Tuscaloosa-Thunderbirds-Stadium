@@ -1,6 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local HighlightClass = require(script.Parent.Parent.Classes.HighlightClass)
 
 local IndicatorService = Knit.CreateService({
 	Name = "IndicatorService",
@@ -23,25 +26,16 @@ end
 
 function IndicatorService:Fire(Position)
 	if not self._Debounce then
-		local ChainsService = Knit.GetService("ChainsService")
 		local GameService = Knit.GetService("GameService")
 
 		self._Debounce = true
 
 		local positionIndicator = copy_indicator(Position)
 
-		local update_table = {
+		GameService:Update({
 			ClockRunning = false,
 			LastTackle = Position,
-		}
-
-		if ChainsService._Direction == 1 then
-			update_table["StatYard"] = math.floor(Position - workspace.scrimmage.Position.X) / 3
-		else
-			update_table["StatYard"] = math.floor(workspace.scrimmage.Position.X - Position) / 3
-		end
-
-		GameService:Update(update_table)
+		})
 
 		task.delay(self.DebounceLength, function()
 			self._Debounce = false
@@ -57,6 +51,8 @@ function IndicatorService:Fire(Position)
 end
 
 function IndicatorService:KnitStart()
+	local GameService = Knit.GetService("GameService")
+
 	local Field = workspace.Field
 	local OOB_Blocks = Field["OOB Blocks"]
 	local oobdebounce = false
@@ -99,6 +95,53 @@ function IndicatorService:KnitStart()
 			end)
 		end
 	end
+
+	local LOSPart = Instance.new("Part")
+	LOSPart.Size = Vector3.new(workspace.scrimmage.Size.X, 60, workspace.scrimmmage.Size.Z)
+	LOSPart.Transparency = 1
+	LOSPart.CanCollide = false
+	LOSPart.Anchored = true
+	LOSPart.Name = "LOSPart"
+	LOSPart.Parent = workspace
+
+	RunService.Heartbeat:Connect(function(deltaTime)
+		LOSPart.CFrame = workspace.scrimmage.CFrame
+	end)
+
+	local highlights = {}
+
+	LOSPart.Touched:Connect(function(otherPart)
+		if GameService.Values.Clock.Running then --check DBLOS
+			local HumanoidRootPart = otherPart.Parent:FindFirstChild("HumanoidRootPart")
+
+			if HumanoidRootPart then
+				local ws = Vector2.new(
+					HumanoidRootPart.AssemblyLinearVelocity.X,
+					HumanoidRootPart.AssemblyLinearVelocity.Z
+				).Magnitude
+				local heightSpeed = HumanoidRootPart.AssemblyLinearVelocity.Y
+				local check1 = HumanoidRootPart.Orientation.X == 0
+				local check2 = HumanoidRootPart.Orientation.Z == 0
+				local check4 = heightSpeed > 58.31
+
+				if check1 and check2 then
+					if check4 then
+						warn(otherPart.Parent.Name, " appears to be JPing!")
+					end
+				else
+					if highlights[otherPart.Parent.Name] then
+						return
+					end
+					highlights[otherPart.Parent.Name] =
+						HighlightClass.new(workspace:FindFirstChild(otherPart.Parent.Name), "dblos")
+					task.delay(3, function()
+						highlights[otherPart.Parent.Name]:Destroy()
+					end)
+					--DBLOS!
+				end
+			end
+		end
+	end)
 
 	print("IndicatorService Started")
 end
