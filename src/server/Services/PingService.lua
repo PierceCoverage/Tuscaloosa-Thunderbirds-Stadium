@@ -37,13 +37,10 @@ local highlights = {}
 function PingService:SendLag(player: string, lagging: boolean)
 	if lagging then
 		highlights[player] = HighlightClass.new(workspace:FindFirstChild(player), "lag")
-		print("Player is lagging!", player)
 	else
 		if highlights[player] then
 			highlights[player]:Destroy()
 		end
-
-		print("Player has finished lagging!", player)
 	end
 end
 

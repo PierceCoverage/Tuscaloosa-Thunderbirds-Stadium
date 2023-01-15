@@ -6,34 +6,45 @@ local IndicatorService = Knit.CreateService({
 	Name = "IndicatorService",
 	_OldColor1 = nil,
 	_OldColor2 = nil,
-	_TackleDebounce = false,
-	_Direction = -1,
+	_Debounce = false,
 	DebounceLength = 7,
 })
 
-function IndicatorService:Fire(z)
-	if not self._TackleDebounce then
-		local GameService = Knit.GetService("GameService")
-		self._TackleDebounce = true
-		local positionIndicator = workspace.scrimmage:Clone()
-		positionIndicator.CanCollide = false
-		positionIndicator.Parent = workspace
-		positionIndicator.Name = "positionIndicator"
-		positionIndicator.CFrame = CFrame.new(z, workspace.scrimmage.CFrame.Y, workspace.scrimmage.CFrame.Z)
-		positionIndicator.BrickColor = BrickColor.new("Bright red")
-		GameService:Update({ ClockRunning = false })
-		local update_table = { LastTackle = z }
+local function copy_indicator(Position)
+	local position_indicator = workspace.scrimmage:Clone()
+	position_indicator.CanCollide = false
+	position_indicator.Parent = workspace
+	position_indicator.Name = "positionIndicator"
+	position_indicator.CFrame = CFrame.new(Position, workspace.scrimmage.CFrame.Y, workspace.scrimmage.CFrame.Z)
+	position_indicator.BrickColor = BrickColor.new("Bright red")
 
-		if self._Direction == 1 then
-			update_table["StatYard"] = math.floor(z - workspace.scrimmage.Position.X) / 3
+	return position_indicator
+end
+
+function IndicatorService:Fire(Position)
+	if not self._Debounce then
+		local ChainsService = Knit.GetService("ChainsService")
+		local GameService = Knit.GetService("GameService")
+
+		self._Debounce = true
+
+		local positionIndicator = copy_indicator(Position)
+
+		local update_table = {
+			ClockRunning = false,
+			LastTackle = Position,
+		}
+
+		if ChainsService._Direction == 1 then
+			update_table["StatYard"] = math.floor(Position - workspace.scrimmage.Position.X) / 3
 		else
-			update_table["StatYard"] = math.floor(workspace.scrimmage.Position.X - z) / 3
+			update_table["StatYard"] = math.floor(workspace.scrimmage.Position.X - Position) / 3
 		end
 
 		GameService:Update(update_table)
 
 		task.delay(self.DebounceLength, function()
-			self._TackleDebounce = false
+			self._Debounce = false
 			local tInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
 			local goal = { Transparency = 1 }
 
@@ -58,7 +69,7 @@ function IndicatorService:KnitStart()
 					and part.Parent:FindFirstChild("Humanoid")
 					and part.Parent:FindFirstChild("Football")
 				then --check part heirarchy
-					if not oobdebounce then --make custom tackle debounce self.TackleDebounce
+					if not oobdebounce then --make custom debounce self._Debounce
 						oobdebounce = true
 						if
 							OOB_Blocks["OOB Outer Line"].Color ~= Color3.fromRGB(255, 0, 0)
