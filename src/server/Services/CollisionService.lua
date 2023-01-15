@@ -7,17 +7,13 @@ local CollisionService = Knit.CreateService({
 })
 
 function CollisionService:KnitStart()
-	print("CollisionService Started")
-end
+	local ScoreboardService = Knit.GetService("ScoreboardService")
 
-function CollisionService:KnitInit()
 	local wall_parts = "wall_parts"
 	local football_parts = "football_parts"
 	PhysicsService:RegisterCollisionGroup(wall_parts)
 	PhysicsService:RegisterCollisionGroup(football_parts)
 	PhysicsService:CollisionGroupSetCollidable(wall_parts, football_parts, false)
-
-	local ScoreboardService = Knit.GetService("ScoreboardService")
 
 	for _, v in pairs(workspace.Field.Walls:GetChildren()) do
 		v.CanCollide = true
@@ -29,9 +25,13 @@ function CollisionService:KnitInit()
 		end)
 	end
 
+	print("CollisionService Started")
+end
+
+function CollisionService:KnitInit()
 	workspace.ChildAdded:Connect(function(child)
 		if child.Name == "Football" and child.MeshId == "rbxassetid://7737955177" then
-			child.CollisionGroup = football_parts
+			child.CollisionGroup = "football_parts"
 		end
 	end)
 
