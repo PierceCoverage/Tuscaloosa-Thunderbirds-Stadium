@@ -39,19 +39,6 @@ local function team_check(p1, p2)
 	return true
 end
 
-local function tackle_or_block(c1, c2)
-	local fb = c1:FindFirstChild("Football")
-		or Players:FindFirstChild(c1.Name).Backpack:FindFirstChild("Football")
-		or c2:FindFirstChild("Football")
-		or Players:FindFirstChild(c2.Name).Backpack:FindFirstChild("Football")
-
-	if fb then
-		return "tackle", fb
-	else
-		return "block"
-	end
-end
-
 local function magnitude_check(j1, j2)
 	local players_diving = 0
 
@@ -114,51 +101,7 @@ function HitboxClass.new(character): table --returns a Hitbox
 				local OtherPlayer = Players:GetPlayerFromCharacter(Part.Parent)
 
 				if team_check(self._Player, OtherPlayer) then
-					local situation, fb = tackle_or_block(character, Part.Parent)
-					if situation == "tackle" then
-						self.Debounce = true
-
-						task.delay(0.25, function()
-							self.Debounce = false
-						end)
-
-						local distance = (self.Hitbox.Position - Part.Position).Magnitude / 3
-						distance = math.floor(distance * 100) / 100
-
-						MessageService:Send(
-							Players:GetPlayers(),
-							("%s tackled %s from %s yards away."):format(
-								self._Player.Name,
-								OtherPlayer.Name,
-								tostring(distance)
-							),
-							"Tackle"
-						)
-
-						if fb:IsA("Tool") then
-							fb = fb:FindFirstChild("Handle")
-						end
-
-						IndicatorService:Fire(fb.Position.X)
-
-						character.Humanoid.PlatformStand = true
-						Part.Parent.Humanoid.PlatformStand = true
-
-						task.delay(2.5, function()
-							character.Humanoid.PlatformStand = false
-							Part.Parent.Humanoid.PlatformStand = false
-						end)
-					elseif situation == "block" then
-						self.Debounce = true
-
-						task.delay(0.25, function()
-							self.Debounce = false
-						end)
-
-						HitboxService.Client.Block:Fire(self._Player, Part.Parent.HumanoidRootPart.CFrame.LookVector)
-
-						HitboxService.Client.Block:Fire(OtherPlayer, character.HumanoidRootPart.CFrame.LookVector)
-					end --Returning nil would indicate the players are on the same team or on a team that is not tackleable.
+					HitboxService:Touched(character, Part.Parent)
 				end
 			end
 			--end
