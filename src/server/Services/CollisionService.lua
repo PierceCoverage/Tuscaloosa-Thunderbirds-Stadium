@@ -29,7 +29,7 @@ function CollisionService:KnitStart()
 		setCollisionGroup(object, name)
 
 		for _, child in ipairs(object:GetChildren()) do
-			setCollisionGroupRecursive(child)
+			setCollisionGroupRecursive(child, name)
 		end
 	end
 
@@ -65,12 +65,20 @@ function CollisionService:KnitStart()
 	end
 
 	local function onPlayerAdded(player)
+		player:GetPropertyChangedSignal("Team"):Connect(function()
+			local GameService = Knit.GetService("GameService")
+			if player.Team == GameService.Values.Away.Team or player.Team == GameService.Values.Home.Team then
+				setCollisionGroupRecursive(player.Character, "player")
+			else
+				setCollisionGroupRecursive(player.Character, "fan")
+			end
+		end)
 		player.CharacterAdded:Connect(onCharacterAdded)
 	end
 
 	local function onChildAdded(child)
 		if child.Name == "Football" and child.MeshId == "rbxassetid://7737955177" then
-			setCollisionGroup(child, "football")
+			setCollisionGroupRecursive(child, "football")
 		end
 	end
 

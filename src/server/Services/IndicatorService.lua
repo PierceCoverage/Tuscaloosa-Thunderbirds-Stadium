@@ -97,7 +97,7 @@ function IndicatorService:KnitStart()
 	end
 
 	local LOSPart = Instance.new("Part")
-	LOSPart.Size = Vector3.new(workspace.scrimmage.Size.X, 60, workspace.scrimmmage.Size.Z)
+	LOSPart.Size = Vector3.new(workspace.scrimmage.Size.X, 60, workspace.scrimmage.Size.Z)
 	LOSPart.Transparency = 1
 	LOSPart.CanCollide = false
 	LOSPart.Anchored = true
