@@ -10,7 +10,7 @@ return {
 		},
 	},
 	LeagueData = {
-		Division = "D1",
+		Division = "D2",
 		Record = {
 			Losses = 0,
 			Wins = 0,
@@ -24,10 +24,10 @@ return {
 		State = "AZ",
 	},
 	TeamData = {
-		RoleId = 1056956352263618560,
+		RoleId = 1058252381327986749,
 		Initials = "AZ",
 		Logo = 0, --needs to be added to roblox
 		Name = "Arizona Scorpions",
-		PlaceId = 0, --need to create place, don't change
+		PlaceId = 11886080596, --need to create place, don't change
 	},
 }
