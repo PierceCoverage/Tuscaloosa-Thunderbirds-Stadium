@@ -1,12 +1,12 @@
 return {
 	ColorData = {
 		Primary = {
-			BrickColor = BrickColor.new(Color3.fromRGB(29, 95, 80)),
-			Color = Color3.fromRGB(29, 95, 80),
+			BrickColor = BrickColor.new("Dark green"),
+			Color = Color3.fromRGB(58, 190, 160),
 		},
 		Secondary = {
-			BrickColor = BrickColor.new(Color3.fromRGB(58, 190, 160)),
-			Color = Color3.fromRGB(58, 190, 160),
+			BrickColor = BrickColor.new("Earth green"),
+			Color = Color3.fromRGB(29, 95, 80),
 		},
 	},
 	LeagueData = {
@@ -28,6 +28,6 @@ return {
 		Initials = "CHI",
 		Logo = 0, --needs to be added to roblox
 		Name = "Chi-Town Raptors",
-		PlaceId = 0, --need to create place, don't change
+		PlaceId = 12058387150, --need to create place, don't change
 	},
 }

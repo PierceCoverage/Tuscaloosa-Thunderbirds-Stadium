@@ -4,7 +4,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local SpawnService = Knit.CreateService({
 	Name = "SpawnService",
-	Client = {},
 })
 
 function SpawnService:KnitStart()

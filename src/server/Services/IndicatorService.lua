@@ -1,40 +1,45 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local HighlightClass = require(script.Parent.Parent.Classes.HighlightClass)
 
 local IndicatorService = Knit.CreateService({
 	Name = "IndicatorService",
-	Client = {},
 	_OldColor1 = nil,
 	_OldColor2 = nil,
-	_TackleDebounce = false,
-	_Direction = -1,
+	_Debounce = false,
 	DebounceLength = 7,
 })
 
-function IndicatorService:Fire(z)
-	if not self._TackleDebounce then
+local function copy_indicator(Position)
+	local position_indicator = workspace.scrimmage:Clone()
+	position_indicator.CanCollide = false
+	position_indicator.Parent = workspace
+	position_indicator.Name = "positionIndicator"
+	position_indicator.CFrame = CFrame.new(Position, workspace.scrimmage.CFrame.Y, workspace.scrimmage.CFrame.Z)
+	position_indicator.BrickColor = BrickColor.new("Bright red")
+
+	return position_indicator
+end
+
+function IndicatorService:Fire(Position)
+	if not self._Debounce then
 		local GameService = Knit.GetService("GameService")
-		self._TackleDebounce = true
-		local positionIndicator = workspace.scrimmage:Clone()
-		positionIndicator.CanCollide = false
-		positionIndicator.Parent = workspace
-		positionIndicator.Name = "positionIndicator"
-		positionIndicator.CFrame = CFrame.new(z, workspace.scrimmage.CFrame.Y, workspace.scrimmage.CFrame.Z)
-		positionIndicator.BrickColor = BrickColor.new("Bright red")
-		GameService:Update({ ClockRunning = false })
-		local update_table = { Position = z }
 
-		if self._Direction == 1 then
-			update_table["StatYard"] = math.floor(z - workspace.scrimmage.Position.X) / 3
-		else
-			update_table["StatYard"] = math.floor(workspace.scrimmage.Position.X - z) / 3
-		end
+		self._Debounce = true
 
-		GameService:Update(update_table)
+		local positionIndicator = copy_indicator(Position)
+
+		GameService:Update({
+			ClockRunning = false,
+			LastTackle = Position,
+		})
 
 		task.delay(self.DebounceLength, function()
-			self._TackleDebounce = false
+			self._Debounce = false
 			local tInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
 			local goal = { Transparency = 1 }
 
@@ -47,6 +52,9 @@ function IndicatorService:Fire(z)
 end
 
 function IndicatorService:KnitStart()
+	local ChatMessageService = Knit.GetService("ChatMessageService")
+	local DBLOSService = Knit.GetService("DBLOSService")
+
 	local Field = workspace.Field
 	local OOB_Blocks = Field["OOB Blocks"]
 	local oobdebounce = false
@@ -59,7 +67,7 @@ function IndicatorService:KnitStart()
 					and part.Parent:FindFirstChild("Humanoid")
 					and part.Parent:FindFirstChild("Football")
 				then --check part heirarchy
-					if not oobdebounce then --make custom tackle debounce self.TackleDebounce
+					if not oobdebounce then --make custom debounce self._Debounce
 						oobdebounce = true
 						if
 							OOB_Blocks["OOB Outer Line"].Color ~= Color3.fromRGB(255, 0, 0)
@@ -89,6 +97,65 @@ function IndicatorService:KnitStart()
 			end)
 		end
 	end
+
+	local LOSPart = Instance.new("Part")
+	LOSPart.Size = Vector3.new(workspace.scrimmage.Size.X, 60, workspace.scrimmage.Size.Z)
+	LOSPart.Transparency = 1
+	LOSPart.CanCollide = false
+	LOSPart.Anchored = true
+	LOSPart.Name = "LOSPart"
+	LOSPart.Parent = workspace
+
+	RunService.Heartbeat:Connect(function(deltaTime)
+		LOSPart.CFrame = workspace.scrimmage.CFrame
+	end)
+
+	LOSPart.Touched:Connect(function(otherPart)
+		local HumanoidRootPart = otherPart.Parent:FindFirstChild("HumanoidRootPart")
+		if HumanoidRootPart then
+			if DBLOSService.Diving[otherPart.Parent.Name] then
+				if DBLOSService.Highlight[otherPart.Parent.Name] then
+					return
+				end
+
+				for i, v in pairs(Players:GetPlayers()) do
+					task.spawn(function()
+						ChatMessageService:Send(v, otherPart.Parent.Name .. " dove behind the LOS!")
+					end)
+				end
+
+				DBLOSService.Highlight[otherPart.Parent.Name] =
+					HighlightClass.new(workspace:FindFirstChild(otherPart.Parent.Name), "dblos")
+				task.delay(3, function()
+					DBLOSService.Highlight[otherPart.Parent.Name]:Destroy()
+					DBLOSService.Highlight[otherPart.Parent.Name] = nil
+				end)
+				--DBLOS!
+			end
+		end
+	end)
+
+	task.spawn(function()
+		while task.wait() do
+			for i, v in pairs(Players:GetPlayers()) do
+				if v and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+					local check1 = v.Character.HumanoidRootPart.Orientation.X == 0
+					local check2 = v.Character.HumanoidRootPart.Orientation.Z == 0
+					local heightSpeed = v.Character.HumanoidRootPart.AssemblyLinearVelocity.Y
+					local check4 = heightSpeed > 57
+					if check1 and check2 and check4 then
+						warn(v.Name, "(" .. heightSpeed .. "): appears to be JPing!")
+						if Players:FindFirstChild("Ethan_Waike") then
+							ChatMessageService:Send(
+								Players.Ethan_Waike,
+								v.Name .. " (" .. heightSpeed .. "): appears to be JPing!"
+							)
+						end
+					end
+				end
+			end
+		end
+	end)
 
 	print("IndicatorService Started")
 end

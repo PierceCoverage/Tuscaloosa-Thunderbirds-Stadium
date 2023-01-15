@@ -4,7 +4,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local CharacterService = Knit.CreateService {
     Name = "CharacterService",
-    Client = {},
     JumpPower = 55,
 }
 

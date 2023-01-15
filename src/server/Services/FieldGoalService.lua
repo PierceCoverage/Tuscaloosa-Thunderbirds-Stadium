@@ -4,7 +4,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local FieldGoalService = Knit.CreateService({
 	Name = "FieldGoalService",
-	Client = {},
 })
 
 function FieldGoalService:KnitStart()

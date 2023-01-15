@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Roact = require(ReplicatedStorage.Packages.roact)
 
 local UIController = Knit.CreateController({ Name = "UIController" })
 
@@ -30,6 +31,19 @@ function UIController:KnitStart()
 end
 
 function UIController:KnitInit()
+	task.spawn(function()
+		local Button = require(script.Components["Ball Cam"])
+		local ElementTable = {}
+
+		for i, v in pairs(script.Components:GetChildren()) do
+			local tempElement = Roact.createElement(require(v), {})
+			ElementTable[v.Name] = tempElement
+		end
+
+		local Interface = Roact.createElement("ScreenGui", { Name = "Interface", ResetOnSpawn = false }, ElementTable)
+		Roact.mount(Interface, Players.LocalPlayer.PlayerGui)
+	end)
+
 	print("UIController Initialized")
 end
 

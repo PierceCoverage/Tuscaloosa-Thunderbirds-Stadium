@@ -64,6 +64,10 @@ function DiveController:ShowDiveCooldown()
 end
 
 function DiveController:CreateBodyGyro(GoalCFrame)
+	local DBLOSService = Knit.GetService("DBLOSService")
+	task.spawn(function()
+		DBLOSService:Fire()
+	end)
 	self.Diving = true
 	self.DivingCooldown = true
 	task.spawn(function()
@@ -159,7 +163,8 @@ function DiveController:OPDive()
 end
 
 function DiveController:Dive()
-	print("Diving")
+	local DBLOSService = Knit.GetService("DBLOSService")
+
 	if self:HasBall() then
 		if self.Character.Humanoid.PlatformStand and self.CanJump then -- Tackled
 			--print("Backspace get up")
@@ -174,6 +179,7 @@ function DiveController:Dive()
 	else
 		if not self.DivingCooldown and not self.Character.Humanoid.PlatformStand then -- e or backspaced pressed when dive is off cooldown
 			--print("e dive")
+			DBLOSService:Fire()
 			self:CreateBodyGyro(
 				self.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(-math.pi / 2, 0, 0)
 			)
@@ -269,33 +275,5 @@ function DiveController:KnitInit()
 
 	print("DiveController Initialized")
 end
-
-local TE = ReplicatedStorage:WaitForChild("TackleEvent")
-TE.OnClientEvent:Connect(function(direction: any, tackle: boolean)
-	if tackle then
-		--nothing
-	else
-		local RootPart = DiveController.Character:FindFirstChild("HumanoidRootPart")
-		if not RootPart then
-			DiveController.Character.Humanoid.Health = 0
-		end
-		if not RootPart:FindFirstChild("Push") then
-			local Push = Instance.new("BodyVelocity")
-			Push.Name = "Push"
-			Push.MaxForce = Vector3.new(1e7, 1e7, 1e7)
-			Push.P = 125
-			Push.Velocity = direction * 13.5 --9
-			Push.Parent = RootPart
-
-			Push:GetPropertyChangedSignal("Velocity"):Connect(function()
-				Push.Velocity = direction * 13.5
-			end)
-
-			task.delay(0.25, function()
-				Push:Destroy()
-			end)
-		end
-	end
-end)
 
 return DiveController

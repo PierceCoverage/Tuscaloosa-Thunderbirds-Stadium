@@ -1,11 +1,11 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Teams = game:GetService("Teams")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local GamelockService = Knit.CreateService({
 	Name = "GamelockService",
-	Client = {},
 	_GameLock = false,
 	Boundaries = {
 		xMax = 0,
@@ -13,7 +13,7 @@ local GamelockService = Knit.CreateService({
 		zMax = 0,
 		zMin = 0,
 	},
-    Teams = {}
+	Teams = {},
 })
 
 function GamelockService:Lock(bool: boolean)
@@ -42,16 +42,19 @@ function GamelockService:KnitStart()
 						and Position.Z > self.Boundaries.zMin
 						and Position.Z < self.Boundaries.zMax
 					then
-                        if player.Team == Teams:FindFirstChild("Fans") or player.Team == Teams:FindFirstChild("OFN Media") then
-						    if self._GameLock then
-							    player.Team = Teams:FindFirstChild("OFN Media")
-						    end
-                        else
-                            if self.Teams[player.Team.Name] then
-                                self.Teams[player.Team.Name] += 1
-                            else
-                                self.Teams[player.Team.Name] = 1
-                            end
+						if
+							player.Team == Teams:FindFirstChild("Fans")
+							or player.Team == Teams:FindFirstChild("OFN Media")
+						then
+							if self._GameLock then
+								player.Team = Teams:FindFirstChild("OFN Media")
+							end
+						else
+							if self.Teams[player.Team.Name] then
+								self.Teams[player.Team.Name] += 1
+							else
+								self.Teams[player.Team.Name] = 1
+							end
 						end
 					end
 				end
@@ -60,7 +63,7 @@ function GamelockService:KnitStart()
 	end
 
 	task.spawn(function()
-        set_boundaries()
+		set_boundaries()
 
 		while task.wait() do
 			count_players()
@@ -79,7 +82,7 @@ function GamelockService:KnitInit()
 			end
 		end
 
-		if not whitelisted then
+		if not whitelisted and not RunService:IsStudio() then
 			player:Kick("Must be ranked in group")
 		end
 	end)

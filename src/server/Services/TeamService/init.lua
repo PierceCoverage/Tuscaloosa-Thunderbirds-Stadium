@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Teams = game:GetService("Teams")
+
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local TeamService = Knit.CreateService({
@@ -53,6 +54,31 @@ function TeamService:KnitStart()
 	GameService.Values.Away.Team =
 		Teams:FindFirstChild(self._AwayTeam.TeamData and self._AwayTeam.TeamData.Name or "Away")
 
+	task.spawn(function()
+		for i, v in pairs(workspace.Stadium.Seating:GetChildren()) do
+			if v:IsA("BasePart") then
+				if v.BrickColor == BrickColor.new("Bright red") then
+					v.Color = self._HomeTeam.ColorData.Primary.Color
+				elseif v.BrickColor == BrickColor.new("Navy blue") then
+					v.Color = self._HomeTeam.ColorData.Secondary.Color
+				elseif v.BrickColor == BrickColor.new("Smoky grey") then
+					v.Color = Color3.fromRGB(30, 30, 30)
+				end
+			end
+		end
+
+		for i, v in pairs(workspace.Stadium.SeatTarp:GetDescendants()) do
+			if v:IsA("BasePart") and v.BrickColor == BrickColor.new("Navy blue") then
+				v.Color = self._HomeTeam.ColorData.Secondary.Color
+			end
+		end
+
+		for i, v in pairs(workspace.Field["Field Grass"]:GetChildren()) do
+			if v.Name == "Endzone" then
+				v.Color = self._HomeTeam.ColorData.Primary.Color
+			end
+		end
+	end)
 	print("TeamService Started")
 end
 
@@ -62,6 +88,12 @@ function TeamService:KnitInit()
 		table.insert(self._TeamData, team)
 		if team.TeamData.PlaceId == game.PlaceId then
 			self._HomeTeam = team
+
+			local Team = Instance.new("Team")
+			Team.Name = team.TeamData.Name
+			Team.TeamColor = team.ColorData.Primary.BrickColor
+			Team.AutoAssignable = false
+			Team.Parent = Teams
 		end
 	end
 
