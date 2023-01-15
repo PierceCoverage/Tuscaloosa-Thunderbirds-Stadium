@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Teams = game:GetService("Teams")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local HighlightClass = require(script.Parent.Parent.Classes.HighlightClass)
@@ -17,12 +18,21 @@ end
 
 function PingService:Ping(player)
 	local GameService = Knit.GetService("GameService")
+	local ChatMessageService = Knit.GetService("ChatMessageService")
 
 	if player.Team == GameService.Values.Home.Team or player.Team == GameService.Values.Away.Team then
 		if self._PlayerTable[player.Name] then
 			if (tick() - self._PlayerTable[player.Name]) > self.MaxPing then
 				local time = tick() - self._PlayerTable[player.Name]
 				local rounded = math.floor((time * 1000) + 0.5) / 1000
+				for i, v in pairs(Teams.Referee:GetPlayers()) do
+					task.spawn(function()
+						ChatMessageService:Send(
+							v,
+							("%s has hit a lag spike of %s seconds."):format(player.Name, rounded)
+						)
+					end)
+				end
 				warn(("%s has hit a lag spike of %s seconds."):format(player.Name, rounded))
 				self._PlayerTable[player.Name] = tick()
 			end
@@ -49,6 +59,17 @@ function PingService:KnitStart()
 end
 
 function PingService:KnitInit()
+	Players.PlayerAdded:Connect(function(player)
+		player:GetPropertyChangedSignal("Team"):Connect(function()
+			local GameService = Knit.GetService("GameService")
+			if player.Team == GameService.Values.Home.Team or player.Team == GameService.Values.Away.Team then
+				return
+			end
+
+			self._PlayerTable[player.Name] = nil
+		end)
+	end)
+
 	Players.PlayerRemoving:Connect(function(player)
 		if self._PlayerTable[player.Name] then
 			self._PlayerTable[player.Name] = nil
