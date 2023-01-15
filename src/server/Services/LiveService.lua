@@ -18,15 +18,15 @@ function LiveService:GetUpdateType()
 	local GameService = Knit.GetService("GameService")
 
 	if not old_home_score then
-		old_home_score = GameService.Values["HomeScore"]
+		old_home_score = GameService.Values.Home.Score
 	end
 
 	if not old_away_score then
-		old_home_score = GameService.Values["AwayScore"]
+		old_home_score = GameService.Values.Away.Score
 	end
 
-	local HomeScore = GameService.Values["HomeScore"]
-	local AwayScore = GameService.Values["AwayScore"]
+	local HomeScore = GameService.Values.Home.Score
+	local AwayScore = GameService.Values.Away.Score
 
 	if HomeScore > old_home_score then
 		local score_diff = HomeScore - old_home_score

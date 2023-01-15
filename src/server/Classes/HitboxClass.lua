@@ -135,10 +135,8 @@ function HitboxClass.new(character): table --returns a Hitbox
 							"Tackle"
 						)
 
-						if fb then
-							if fb:IsA("Tool") then
-								fb = fb:FindFirstChild("Handle")
-							end
+						if fb:IsA("Tool") then
+							fb = fb:FindFirstChild("Handle")
 						end
 
 						IndicatorService:Fire(fb.Position.X)

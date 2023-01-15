@@ -2,20 +2,28 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
-local PingController = Knit.CreateController({ Name = "PingController" })
+local PingController = Knit.CreateController({ 
+	Name = "PingController",
+	LastPing = 0
+ })
 
 function PingController:KnitStart()
 	task.spawn(function()
 		local PingService = Knit.GetService("PingService")
-		local UIController = Knit.GetController("UIController")
-
-		while task.wait(1) do
+		while true do
 			local Start = tick()
 			PingService:Ping()
 			local End = tick()
 			local new_ping_seconds = End - Start
 			local new_ping_ms = math.floor((new_ping_seconds * 1000) + 0.5)
-			UIController:SetPing(new_ping_ms)
+			self.LastPing = new_ping_ms
+		end
+	end)
+
+	task.spawn(function()
+		while task.wait(1) do
+			local UIController = Knit.GetController("UIController")
+			UIController:SetPing(self.LastPing)
 		end
 	end)
 
@@ -23,6 +31,8 @@ function PingController:KnitStart()
 end
 
 function PingController:KnitInit()
+
+	
 	print("PingController Initialized")
 end
 

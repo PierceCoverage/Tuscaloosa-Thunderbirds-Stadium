@@ -14,12 +14,12 @@ function HitboxService:KnitStart()
 end
 
 function HitboxService:KnitInit()
-	local HitboxClass = require(script.HitboxClass)
+	local HitboxClass = require(script.Parent.Parent.Classes.HitboxClass)
 
 	Players.PlayerAdded:Connect(function(player)
 		player.CharacterAdded:Connect(function(character)
 			local Hitbox = HitboxClass.new(character)
-
+			
 			character.Destroying:Connect(function()
 				Hitbox:Destroy()
 			end)
