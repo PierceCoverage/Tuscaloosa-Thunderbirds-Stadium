@@ -2,10 +2,10 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
-local PingController = Knit.CreateController({ 
+local PingController = Knit.CreateController({
 	Name = "PingController",
-	LastPing = 0
- })
+	LastPing = 0,
+})
 
 function PingController:KnitStart()
 	task.spawn(function()
@@ -31,8 +31,6 @@ function PingController:KnitStart()
 end
 
 function PingController:KnitInit()
-
-	
 	print("PingController Initialized")
 end
 
