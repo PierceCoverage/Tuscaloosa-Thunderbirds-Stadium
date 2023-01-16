@@ -141,6 +141,13 @@ function IndicatorService:KnitStart()
 					return
 				end
 
+				if
+					otherPart.Parent:FindFirstChild("Football")
+					or Players:GetPlayerFromCharacter(otherPart.Parent).Backpack:FindFirstChild("Football")
+				then
+					return
+				end
+
 				for i, v in pairs(Players:GetPlayers()) do
 					task.spawn(function()
 						ChatMessageService:Send(v, otherPart.Parent.Name .. " touched the LOS!")
