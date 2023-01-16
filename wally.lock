@@ -15,7 +15,7 @@ dependencies = []
 [[package]]
 name = "nfl/thunderbirds-stadium"
 version = "0.1.0"
-dependencies = [["Knit", "sleitnick/knit@1.4.7"], ["Signal", "sleitnick/signal@1.2.1"], ["maid", "flamenco687/maid@3.2.2"], ["roact", "roblox/roact@1.4.4"]]
+dependencies = [["Knit", "sleitnick/knit@1.4.7"], ["Signal", "sleitnick/signal@1.2.1"], ["maid", "flamenco687/maid@3.2.2"], ["profileservice", "surnautica/profileservice@1.0.0"], ["roact", "roblox/roact@1.4.4"]]
 
 [[package]]
 name = "roblox/roact"
@@ -40,4 +40,9 @@ dependencies = []
 [[package]]
 name = "sleitnick/signal"
 version = "1.2.1"
+dependencies = []
+
+[[package]]
+name = "surnautica/profileservice"
+version = "1.0.0"
 dependencies = []
