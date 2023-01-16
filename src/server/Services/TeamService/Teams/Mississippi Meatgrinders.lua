@@ -17,7 +17,7 @@ return {
 		},
 	},
 	LocationData = { --No location data yet so don't do this category
-		City = "Missisippi",
+		City = "Mississippi",
 		Dome = false,
 		Latitude = 42.361145,
 		Longitude = -71.057083,
@@ -27,7 +27,7 @@ return {
 		RoleId = 1056966926624112650,
 		Initials = "MS",
 		Logo = 0, --needs to be added to roblox
-		Name = "Missisippi Meatgrinders",
+		Name = "Mississippi Meatgrinders",
 		PlaceId = 12125862795,
 	},
 }

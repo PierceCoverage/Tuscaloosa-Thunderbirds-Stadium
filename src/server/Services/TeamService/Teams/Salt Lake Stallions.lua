@@ -1,12 +1,12 @@
 return {
 	ColorData = {
 		Primary = {
-			BrickColor = BrickColor.new(Color3.fromRGB(60, 152, 203)),
-			Color = Color3.fromRGB(60, 152, 203),
-		},
-		Secondary = {
 			BrickColor = BrickColor.new(Color3.fromRGB(0, 51, 160)),
 			Color = Color3.fromRGB(0, 51, 160),
+		},
+		Secondary = {
+			BrickColor = BrickColor.new(Color3.fromRGB(60, 152, 203)),
+			Color = Color3.fromRGB(60, 152, 203),
 		},
 	},
 	LeagueData = {
@@ -25,9 +25,9 @@ return {
 	},
 	TeamData = {
 		RoleId = 1056941132262674514,
-		Initials = "SAL",
+		Initials = "SLC",
 		Logo = 0, --needs to be added to roblox
-		Name = "Salt Lake City Stallions",
+		Name = "Salt Lake Stallions",
 		PlaceId = 0, --need to create place, don't change
 	},
 }
