@@ -2,7 +2,9 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Teams = game:GetService("Teams")
+
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Signal = require(ReplicatedStorage.Packages.Signal)
 
 local ScoreboardService = Knit.CreateService({
 	Name = "ScoreboardService",
@@ -10,6 +12,7 @@ local ScoreboardService = Knit.CreateService({
 		StopRecord = Knit.CreateSignal(),
 		Event = Knit.CreateSignal(),
 	},
+	Blown = Signal.new(),
 	_AutoStop = false,
 	ClockStart = tick(),
 	PlayClockStart = tick(),
@@ -380,6 +383,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 				GameService:Update({ PlayClockRunning = false })
 				return
 			end
+			self.Blown:Fire()
 			self:RunPC(true)
 			self.Client.Event:FireAll("Blown")
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Blown", true)
@@ -396,6 +400,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 	elseif item == "P" then
 		if code:sub(2, len) == "STA" then
 			if not GameService.Values.PlayClock.Running and not GameService.Values.Clock.Running then
+				self.Blown:Fire()
 				self.Client.Event:FireAll("Blown")
 				MessageService:Send(Players:GetPlayers(), player.Name .. ": Blown", true)
 				ReplicatedStorage.ReplayRemote:FireAllClients({ "Record" })

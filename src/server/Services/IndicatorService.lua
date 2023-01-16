@@ -54,6 +54,7 @@ end
 function IndicatorService:KnitStart()
 	local ChatMessageService = Knit.GetService("ChatMessageService")
 	local DBLOSService = Knit.GetService("DBLOSService")
+	local StatsService = Knit.GetService("StatsService")
 
 	local Field = workspace.Field
 	local OOB_Blocks = Field["OOB Blocks"]
@@ -110,6 +111,8 @@ function IndicatorService:KnitStart()
 		LOSPart.CFrame = workspace.scrimmage.CFrame
 	end)
 
+	local fs = {}
+
 	LOSPart.Touched:Connect(function(otherPart)
 		local HumanoidRootPart = otherPart.Parent:FindFirstChild("HumanoidRootPart")
 		if HumanoidRootPart then
@@ -131,6 +134,24 @@ function IndicatorService:KnitStart()
 					DBLOSService.Highlight[otherPart.Parent.Name] = nil
 				end)
 				--DBLOS!
+			end
+
+			if StatsService.Presnap then
+				if fs[otherPart.Parent.Name] then
+					return
+				end
+
+				for i, v in pairs(Players:GetPlayers()) do
+					task.spawn(function()
+						ChatMessageService:Send(v, otherPart.Parent.Name .. " touched the LOS!")
+					end)
+				end
+
+				fs[otherPart.Parent.Name] = HighlightClass.new(workspace:FindFirstChild(otherPart.Parent.Name), "fs")
+				task.delay(3, function()
+					fs[otherPart.Parent.Name]:Destroy()
+					fs[otherPart.Parent.Name] = nil
+				end)
 			end
 		end
 	end)
