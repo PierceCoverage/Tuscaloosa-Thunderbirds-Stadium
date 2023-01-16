@@ -5,7 +5,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local StatsService = Knit.CreateService({
 	Name = "StatsService",
-	Client = {},
 	Presnap = false,
 })
 

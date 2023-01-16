@@ -3,7 +3,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local CommandService = Knit.CreateService {
     Name = "CommandService",
-    Client = {},
 }
 
 function CommandService:KnitStart()
