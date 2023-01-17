@@ -163,8 +163,6 @@ function DiveController:OPDive()
 end
 
 function DiveController:Dive()
-	local DBLOSService = Knit.GetService("DBLOSService")
-
 	if self:HasBall() then
 		if self.Character.Humanoid.PlatformStand and self.CanJump then -- Tackled
 			--print("Backspace get up")
@@ -179,7 +177,6 @@ function DiveController:Dive()
 	else
 		if not self.DivingCooldown and not self.Character.Humanoid.PlatformStand then -- e or backspaced pressed when dive is off cooldown
 			--print("e dive")
-			DBLOSService:Fire()
 			self:CreateBodyGyro(
 				self.Character.HumanoidRootPart.CFrame * CFrame.new(0, 1, 0) * CFrame.Angles(-math.pi / 2, 0, 0)
 			)
