@@ -65,7 +65,22 @@ function LiveService:GetUpdateType()
 	end
 end
 
-local function get_down_message(down) end
+local function get_down_message()
+	local GameService = Knit.GetService("GameService")
+	local down = GameService.Values.Down
+
+	if down == 1 then
+		return "1st"
+	elseif down == 2 then
+		return "2nd"
+	elseif down == 3 then
+		return "3rd"
+	elseif down == 4 then
+		return "4th"
+	else
+		return "Kickoff"
+	end
+end
 
 local function sendMessage(message, teamData)
 	local data = {

@@ -114,9 +114,8 @@ function IndicatorService:KnitStart()
 	local fs = {}
 
 	LOSPart.Touched:Connect(function(otherPart)
-		local HumanoidRootPart = otherPart.Parent:FindFirstChild("HumanoidRootPart")
-		if HumanoidRootPart then
-			if DBLOSService.Diving[otherPart.Parent.Name] then
+		if otherPart.Name == "HumanoidRootPart" then
+			if DBLOSService.Diving[otherPart.Parent.Name] and false then
 				if DBLOSService.Highlight[otherPart.Parent.Name] then
 					return
 				end
@@ -129,7 +128,7 @@ function IndicatorService:KnitStart()
 
 				DBLOSService.Highlight[otherPart.Parent.Name] =
 					HighlightClass.new(workspace:FindFirstChild(otherPart.Parent.Name), "dblos")
-				task.delay(3, function()
+				task.delay(5, function()
 					DBLOSService.Highlight[otherPart.Parent.Name]:Destroy()
 					DBLOSService.Highlight[otherPart.Parent.Name] = nil
 				end)
@@ -155,7 +154,7 @@ function IndicatorService:KnitStart()
 				end
 
 				fs[otherPart.Parent.Name] = HighlightClass.new(workspace:FindFirstChild(otherPart.Parent.Name), "fs")
-				task.delay(3, function()
+				task.delay(5, function()
 					fs[otherPart.Parent.Name]:Destroy()
 					fs[otherPart.Parent.Name] = nil
 				end)

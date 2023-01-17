@@ -46,6 +46,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 	local GameService = Knit.GetService("GameService")
 	local LiveService = Knit.GetService("LiveService")
 	local MessageService = Knit.GetService("MessageService")
+	local DBLOSService = Knit.GetService("DBLOSService")
 
 	local len = code:len()
 	local item = code:sub(1, 1)
@@ -414,8 +415,10 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 				self:RunPC(true)
 			end
 		elseif code:sub(2, len) == "STP" then
+			DBLOSService.Presnap = false
 			self:RunPC(false)
 		elseif code:sub(2, len) == "R" then
+			DBLOSService.Presnap = false
 			GameService:Update({ PlayClockValue = 20 - GameService.Values.PlayClock.Value })
 		end
 	elseif item == "Q" then
@@ -628,6 +631,7 @@ function ScoreboardService:ReceiveData(player: Player, code: string)
 		elseif code == "FLGDEAD" then
 			self:RunClock(false)
 			self:RunPC(false)
+			DBLOSService.Presnap = false
 			MessageService:Send(Players:GetPlayers(), player.Name .. ": Dead Play", true)
 			self.Client.Event:FireAll("Flag")
 		end
@@ -672,20 +676,25 @@ end
 function ScoreboardService:KnitStart()
 	local GameService = Knit.GetService("GameService")
 	RunService.Heartbeat:Connect(function(deltaTime)
+		local now = tick()
 		task.spawn(function()
-			local now = tick()
-
 			if now - self.ClockStart >= 1 then
 				self.ClockStart = now
 				if GameService.Values.Clock.Running and GameService.Values.Clock.Value > 0 then
 					GameService:Update({ ClockValue = -1 })
+				elseif GameService.Values.Clock.Value == 0 and GameService.Values.Clock.Running then
+					GameService:Update({ ClockRunning = false })
 				end
 			end
+		end)
 
+		task.spawn(function()
 			if now - self.PlayClockStart >= 1 then
 				self.PlayClockStart = now
 				if GameService.Values.PlayClock.Running and GameService.Values.PlayClock.Value > 0 then
 					GameService:Update({ PlayClockValue = -1 })
+				elseif GameService.Values.PlayClock.Value == 0 and GameService.Values.PlayClock.Running then
+					GameService:Update({ PlayClockRunning = false })
 				end
 			end
 		end)
