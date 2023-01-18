@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TextChatService = game:GetService("TextChatService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local CommandService = Knit.CreateService({
@@ -69,6 +70,13 @@ function CommandService:KnitInit()
 		end)
 	end)
 
+	for i, v in pairs(TextChatService:GetChildren()) do
+		if v:IsA("TextChatCommand") then
+			v.Triggered:Connect(function(a, b)
+				print(a, b)
+			end)
+		end
+	end
 	print("CommandService Initialized")
 end
 
