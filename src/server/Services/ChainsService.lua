@@ -19,7 +19,7 @@ function ChainsService:MoveLOS(distance)
 	local GameService = Knit.GetService("GameService")
 
 	if distance and tonumber(distance) then --Move from current position + yards
-		distance *= 3 * self._Direction
+		distance *= self._Direction
 	else --Move to last tackle position
 		distance = 0
 	end
