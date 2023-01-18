@@ -666,7 +666,7 @@ function ScoreboardService:RunClock(bool: boolean)
 	end
 
 	self.ClockStart = tick()
-	self._AutoStop = false
+	self:SetAutoStop(false)
 	GameService:Update({ ClockRunning = bool })
 end
 

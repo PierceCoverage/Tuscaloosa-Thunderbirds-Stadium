@@ -27,6 +27,8 @@ function UIController:SetFPS(FPSCount: number)
 end
 
 function UIController:KnitStart()
+	require(script.RobloxUIs.Options)
+
 	print("UIController Started")
 end
 

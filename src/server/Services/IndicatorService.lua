@@ -54,6 +54,7 @@ end
 function IndicatorService:KnitStart()
 	local ChatMessageService = Knit.GetService("ChatMessageService")
 	local DBLOSService = Knit.GetService("DBLOSService")
+	local ScoreboardService = Knit.GetService("ScoreboardService")
 	local StatsService = Knit.GetService("StatsService")
 
 	local Field = workspace.Field
@@ -81,8 +82,8 @@ function IndicatorService:KnitStart()
 						OOB_Blocks["OOB Outer Line"].Color = Color3.fromRGB(255, 0, 0)
 						OOB_Blocks["Inner OOB Line"].Color = Color3.fromRGB(255, 0, 0)
 
-						ReplicatedStorage.Stats.Event:Fire("OOB", true, part.Parent)
-						_G.autoStop = true ----------- CAN EDIT OUT, ADDED 6/13/21 -----------
+						ScoreboardService:SetAutoStop(true)
+
 						if part.Name == "Handle" then
 							self:Fire(part.Position.X)
 						else

@@ -17,6 +17,9 @@
             "$className": "ServerScriptService",
             "server": {
                 "$path": "src/server"
+            },
+            "Modern Admin Commands": {
+                "$path": "src/Modern Admin Commands"
             }
         },
 

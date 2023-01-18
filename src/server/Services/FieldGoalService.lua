@@ -20,9 +20,11 @@ function FieldGoalService:KnitInit()
 		local debounce = false
 
 		wall.Touched:Connect(function(hit)
+			local ScoreboardService = Knit.GetService("ScoreboardService")
+
 			if debounce == false and hit.Name == name then
 				debounce = true
-				_G.autoStop = true
+				ScoreboardService:SetAutoStop(true)
 				debounce = false
 			end
 		end)
@@ -33,10 +35,12 @@ function FieldGoalService:KnitInit()
 			local debounce = false
 
 			upright.Touched:Connect(function(hit)
+				local ScoreboardService = Knit.GetService("ScoreboardService")
 				local MessageService = Knit.GetService("MessageService")
+
 				if debounce == false and hit.Name == name then
 					debounce = true
-					_G.autoStop = true
+					ScoreboardService:SetAutoStop(true)
 					MessageService:Send(Players:GetPlayers(), "Field Goal is Good")
 					debounce = false
 				end
