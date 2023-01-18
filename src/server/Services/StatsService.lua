@@ -34,14 +34,14 @@ function StatsService:KnitStart()
 				while Ball.Parent ~= workspace do -- Wait for ball to be thrown
 					task.wait()
 				end
-				GameService:Update({ ClockRunning = true })
+				GameService:Update({ ClockRunning = true, PlayClockRunning = false })
 				self.Presnap = false
 			end
 		elseif Ball:IsDescendantOf(Players) then -- If ball is in the BackPack
 			while Ball.Parent ~= workspace do -- Wait for ball to be thrown
 				task.wait()
 			end
-			GameService:Update({ ClockRunning = true })
+			GameService:Update({ ClockRunning = true, PlayClockRunning = false })
 			self.Presnap = false
 		else -- Ball has disappeared
 			self.Presnap = false
