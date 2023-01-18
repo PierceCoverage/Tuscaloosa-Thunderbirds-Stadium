@@ -57,15 +57,16 @@ function LeaderstatsService:KnitInit() --No yield
 	end
 
 	Players.PlayerAdded:Connect(function(player)
+		local TeamService = Knit.GetService("TeamService")
 		local player_data = get_data(player.UserId)
 		local leaderstats = create_leaderstats(player)
+		
 		if player_data then
 			if player_data.discord and player_data.discord.id then
 				leaderstats.Verified.Value = "Yes"
-				local TeamInformation = Knit.GetService("TeamService")
                 local team
                 for i, v in pairs(player_data.discord.roles) do
-                    local check = TeamInformation:GetTeamFromRole(v)
+                    local check = TeamService:GetTeamFromRole(v)
                     if check then
                         team = check
                     end
