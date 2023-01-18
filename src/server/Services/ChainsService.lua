@@ -31,7 +31,7 @@ function ChainsService:MoveLOS(distance)
 		local tweenInfo = TweenInfo.new(move_distance / 30, Enum.EasingStyle.Linear)
 		local tween = TweenService:Create(self.down.P, tweenInfo, { CFrame = target })
 		tween:Play()
-		GameService:Update({ Position = target.CFrame.X })
+		GameService:Update({ Position = target.X })
 	else
 		local target = CFrame.new(GameService.Values.LastTackle, self.down.P.CFrame.Y, self.down.P.CFrame.Z)
 			* CFrame.Angles(0, math.rad(-90), 0)
