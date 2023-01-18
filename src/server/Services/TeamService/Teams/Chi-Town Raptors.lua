@@ -28,6 +28,6 @@ return {
 		Initials = "CHI",
 		Logo = 0, --needs to be added to roblox
 		Name = "Chi-Town Raptors",
-		PlaceId = 12058387150, --need to create place, don't change
+		PlaceId = 12197945198, --need to create place, don't change
 	},
 }
