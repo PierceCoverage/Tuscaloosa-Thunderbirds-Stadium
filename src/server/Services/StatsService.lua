@@ -28,21 +28,34 @@ function StatsService:KnitStart()
 
 		if Ball:IsDescendantOf(workspace) then --If ball is in workspace
 			if Ball.Parent == workspace then
+				self.Presnap = false
 				-- Already in the air. Not sure what to do....
 			else
 				-- Not in the air! Yay.
 				while Ball.Parent ~= workspace do -- Wait for ball to be thrown
 					task.wait()
 				end
-				GameService:Update({ ClockRunning = true, PlayClockRunning = false })
+
 				self.Presnap = false
+
+				if GameService.Values.Down > 4 then
+					return
+				end
+
+				GameService:Update({ ClockRunning = true, PlayClockRunning = false })
 			end
 		elseif Ball:IsDescendantOf(Players) then -- If ball is in the BackPack
-			while Ball.Parent ~= workspace do -- Wait for ball to be thrown
+			while Ball.Parent ~= workspace and not workspace:FindFirstChild("Football") do -- Wait for ball to be thrown
 				task.wait()
 			end
-			GameService:Update({ ClockRunning = true, PlayClockRunning = false })
+			
 			self.Presnap = false
+
+			if GameService.Values.Down > 4 then
+				return
+			end
+
+			GameService:Update({ ClockRunning = true, PlayClockRunning = false })
 		else -- Ball has disappeared
 			self.Presnap = false
 		end
