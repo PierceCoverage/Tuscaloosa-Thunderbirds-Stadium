@@ -10,7 +10,7 @@ local settings = {
 
 	GroupId = 0,
 
-	Creators = { "Ethan_Waike", "RNF", "Player1" }, -- Username:UserID'
+	Creators = { "Ethan_Waike", "RNF" }, -- Username:UserID'
 
 	Owners = {},
 

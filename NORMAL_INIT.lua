@@ -1,12 +1,19 @@
+local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local sha1 = require(script.sha1)
 
 local ScoreboardController = Knit.CreateController({ Name = "Scoreboard" })
 
+local function round(x, y)
+    return math.round(x / y) * y
+end
+
 function ScoreboardController:KnitStart()
 	local GameService = Knit.GetService("GameService")
-	local TeamService = Knit.GetService("TeamService")
 	local ScoreboardService = Knit.GetService("ScoreboardService")
 	local Scoreboard = Players.LocalPlayer.PlayerGui:WaitForChild("Scoreboard")
 	local Frame = Scoreboard.Frame.SBF
@@ -129,6 +136,20 @@ function ScoreboardController:KnitStart()
 			end
 		end
 	end)
+
+	ScoreboardService:Start(sha1.sha1(HttpService:JSONEncode({
+		-- Any number of data points can be added here
+		time = {
+			-- CPU start is the main data point used
+			cpuStart = round(tick() - os.clock(), 5),
+			timezone = os.date("%Z"),
+			isDST = os.date("*t").isdst,
+		},
+		device = {
+			accelerometerEnabled = UserInputService.AccelerometerEnabled,
+			touchEnabled = UserInputService.TouchEnabled,
+		},
+	})))
 
 	print("ScoreboardController Started")
 end

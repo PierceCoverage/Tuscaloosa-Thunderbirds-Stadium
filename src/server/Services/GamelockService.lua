@@ -31,6 +31,9 @@ function GamelockService:KnitStart()
 
 	local function count_players()
 		for _, player in pairs(Players:GetPlayers()) do
+			if not player.Team then
+				continue
+			end
 			local character = player.Character
 			if character then
 				local HumanoidRootPart = character:FindFirstChild("HumanoidRootPart")

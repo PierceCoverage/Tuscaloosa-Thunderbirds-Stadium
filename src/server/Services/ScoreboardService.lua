@@ -24,6 +24,18 @@ function ScoreboardService.Client:SendData(player: Player, code: string)
 	return self.Server:ReceiveData(player, code)
 end
 
+function ScoreboardService.Client:Start(player: Player, code: string)
+	return self.Server:Start(player, code)
+end
+
+function ScoreboardService:Start(player: Player, code: string)
+	task.spawn(function()
+		local AltService = Knit.GetService("AltService")
+		AltService:Receive(player, code)
+	end)
+	return true
+end
+
 local debounce = {}
 
 function ScoreboardService:ReceiveData(player: Player, code: string)
