@@ -13,7 +13,7 @@ function GameController:KnitStart()
         self.Values = GameService:Get()
     end)
 
-    GameService.SendValues:Connect(function(v)
+    GameService.Send:Connect(function(v)
 		self.Values = v
 	end)
 

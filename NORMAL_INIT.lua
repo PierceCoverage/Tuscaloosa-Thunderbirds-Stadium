@@ -116,7 +116,7 @@ function ScoreboardController:KnitStart()
 
 	set_values()
 
-	GameService.SendValues:Connect(function(v)
+	GameService.Send:Connect(function(v)
 		Values = v
 		set_values()
 	end)

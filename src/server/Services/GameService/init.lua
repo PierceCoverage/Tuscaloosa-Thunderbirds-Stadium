@@ -6,7 +6,7 @@ local GameService
 GameService = Knit.CreateService({
 	Name = "GameService",
 	Client = {
-		SendValues = Knit.CreateSignal(),
+		Send = Knit.CreateSignal(),
 	},
 	Values = {},
 })
@@ -95,7 +95,7 @@ function GameService:Update(toupdate: table)
 		end
 	end
 
-	self.Client.SendValues:FireAll(self.Values)
+	self.Client.Send:FireAll(self.Values)
 end
 
 function GameService:KnitStart()
