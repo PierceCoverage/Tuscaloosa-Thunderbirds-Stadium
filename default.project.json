@@ -1,8 +1,7 @@
 {
-    "name": "thunderbirds-stadium",
+    "name": "HSFL",
     "tree": {
         "$className": "DataModel",
-        
         "ReplicatedStorage": {
             "$className": "ReplicatedStorage",
             "shared": {
@@ -12,17 +11,12 @@
                 "$path": "Packages"
             }
         },
-
         "ServerScriptService": {
             "$className": "ServerScriptService",
             "server": {
                 "$path": "src/server"
-            },
-            "Modern Admin Commands": {
-                "$path": "src/Modern Admin Commands"
             }
         },
-
         "StarterPlayer": {
             "StarterPlayerScripts": {
                 "client": {
